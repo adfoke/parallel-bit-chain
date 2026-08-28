@@ -253,6 +253,24 @@ If UMA becomes the mainstream PC form factor, the miner base widens from "comput
 
 Farms cannot be excluded by algorithm design. Mitigations: radical accessibility (one card mines), Stratum v2 (small miners keep block-construction rights without centralized pool proxies). Commodity-hardware resale lowers attack cost to depreciation + electricity — the inherent price of distribution; symmetrically, ASICs' zero resale value binds miners to their manufacturer, itself a centralizing force. Early-network vulnerability to cloud rental is addressed at launch (§8).
 
+### 6.4 Post-quantum considerations
+
+The threat surfaces are asymmetric: proof-of-work and signatures differ by more than an order of magnitude in severity.
+
+**PoW is structurally resistant.** Grover's search gives only a quadratic speedup (256-bit → effective 128-bit), parallelizes poorly (M machines yield √M, not M, speedup in a first-solution-wins race), and — decisively for Geyser — requires evaluating the hash *in superposition*: quantum random-access memory at multi-gigabyte scale (QRAM), widely believed physically unscalable. The bandwidth binding that resists ASICs is the same structure that resists quantum mining. Even a hypothetical quantum miner is a mining-economics event absorbed by difficulty retargeting, not a chain-breaking event.
+
+**Signatures are the real question — on a 10+ year clock.** Shor's algorithm breaks secp256k1 given an estimated ~2,300 logical qubits (~10^7–10^8 physical under surface-code error correction), against a 2026 state of the art of ~10^2 physical qubits. Exposure classes matter and are frequently overlooked: P2TR outputs commit a public key (the tweaked key) at output *creation* and are forgeable the day a cryptographically relevant quantum computer exists; hash-committed outputs (P2WPKH-style) keep keys off-chain until spend, leaving only a mempool spend-race window. "Harvest now, decrypt later" does not apply — consensus has no confidentiality surface.
+
+**Posture: pre-wire now, activate on milestones, no security theater at genesis.**
+
+| Witness version | Form | Quantum hygiene | Intended use |
+|---|---|---|---|
+| v0 | hash-committed (P2WPKH/P2WSH equivalents) | key off-chain at rest | vaults, cold storage |
+| v1 | P2TR (default) | key exposed at creation | everyday use (cheapest) |
+| v2 | reserved: ML-DSA-65 primary, SLH-DSA-128s conservative | quantum-secure | activated as CRQC approaches |
+
+No PQC enters consensus at genesis: there is no CRQC; ML-DSA-65 costs ~4–5× input weight after the witness discount; implementations and wallet tooling are still maturing. Activation is triggered by objective capability milestones (e.g., fault-tolerant machines at ≥10^3 logical qubits, or accelerated NIST/CNSA deprecation schedules), executed as a consensus-internal scheduled fork — the same mechanism as `algo_version` — and migrated via hybrid dual signatures (Schnorr + ML-DSA) so no coin is left behind. GTC is engineered as a century-scale store of value; the signature planning horizon is the asset's lifetime, which is exactly why the extension points are reserved now rather than retrofitted later. keccak-256 retains 2^128 quantum preimage security and needs no rotation.
+
 ---
 
 ## 7. Data Anchoring (Neutrality Policy)

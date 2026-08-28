@@ -29,12 +29,13 @@
 - **UMA（Apple Silicon 等）**：共识零改动，Mac 是合法矿机（M4 Max ≈ 0.8×RTX 5070，每 hash 电耗更低）；Metal 后端进 P2 路线
 - **区块不扩**：一边用 Geyser 保矿工分布、一边用大区块毁节点分布是左手打右手；要吞吐走 L2
 - **存证 / 锚定**：共识中立，OP_RETURN 80 B 政策收编（兼容 OpenTimestamps）；日常锚 GTC、终局双锚 BTC，链上只放哈希
+- **抗量子**：PoW 结构性抵抗（QRAM 论证）；签名走输出类型阶梯 v0 哈希承诺 / v1 Taproot / v2 预留 PQC（ML-DSA），里程碑触发启用——创世不放安全表演
 - **诚实清单**：GPU 农场无法用算法排除、新链启动期最脆弱、绝对 ASIC 免疫不存在 —— 全部写在文档 §7.4 / §11，不装看不见
 
 ## 文档与路线图
 
 - 白皮书（草案 v0.9，双语）：**[English](docs/whitepaper/gtc-whitepaper-en.md)**（canonical）· **[中文](docs/whitepaper/gtc-whitepaper-zh.md)** —— 纯技术向；v1.0 于 P0 测试向量冻结时发布
-- 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.4）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
+- 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.5）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
 
 | 阶段 | 内容 |
 |---|---|
