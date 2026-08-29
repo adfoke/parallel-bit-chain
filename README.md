@@ -2,7 +2,7 @@
 
 一条 **GPU-only 挖矿**的 PoW 公链，**AI-native**：人类用 BTC，AI 用 PTC。ticker: **PTC**。当前处于设计阶段，尚无代码。
 
-**命名**：小写 `b` 上下翻转就是 `p` —— BTC 是人类的链，PTC 是它的镜像：机器的链。账本侧相同，共识侧相反，使用主体相对。Parallel，也是 flipped。
+**命名**：小写 `b` 上下翻转就是 `p` —— BTC 是人类的链，PTC 是它的镜像：机器的链。账本侧相同，共识侧相反，使用主体相对。Parallel，也是 flipped。词源同样镜像：Bitcoin = Bit + **Coin**（握在手中的价值）；Parallel Bit Chain 的后半段 = Bit + **Chain**（机器脚下的轨道）。词与字母两次翻转，输出正是域名 [pitchain.dev](https://pitchain.dev)。
 
 **官网**：[pitchain.dev](https://pitchain.dev) —— 部署在 Cloudflare 上（`wrangler deploy` 即发布）
 
@@ -50,7 +50,7 @@ BTC 是人类的链，PTC 是机器的链 —— `b` 翻过来是 `p`，镜像�
 ## 文档与路线图
 
 - 白皮书（草案 v0.9，双语）：**[English](docs/whitepaper/ptc-whitepaper-en.md)**（canonical）· **[中文](docs/whitepaper/ptc-whitepaper-zh.md)** —— 纯技术向；v1.0 于 P0 测试向量冻结时发布
-- 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.7）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
+- 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.8）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
 
 | 阶段 | 内容 |
 |---|---|
