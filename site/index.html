@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PTC — Parallel Bit Chain</title>
-<meta name="description" content="A GPU-native, Bitcoin-isomorphic proof-of-work chain. Same ledger as Bitcoin, flipped proof of work. Design stage — P0 spec freeze in progress.">
+<meta name="description" content="A GPU-native, Bitcoin-isomorphic proof-of-work chain for the machine economy. Humans on Bitcoin, agents on PTC. Design stage — P0 spec freeze in progress.">
 <meta name="theme-color" content="#0b0d12">
 <meta property="og:title" content="PTC — Parallel Bit Chain">
-<meta property="og:description" content="BTC, flipped. Same ledger, opposite proof of work — a GPU-native PoW chain.">
+<meta property="og:description" content="BTC, flipped. Humans on Bitcoin, agents on PTC — a GPU-native PoW chain for the machine economy.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pitchain.dev/">
 <meta property="og:site_name" content="PTC — Parallel Bit Chain">
@@ -171,6 +171,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
     <a class="brand" href="#top" aria-label="PTC — Parallel Bit Chain"><span class="flip-b">b</span>tc</a>
     <div class="nav-links">
       <a href="#mirror" data-i18n="nav_mirror">Mirror</a>
+      <a href="#ai" data-i18n="nav_ai">AI-Native</a>
       <a href="#geyser" data-i18n="nav_geyser">Geyser</a>
       <a href="#honesty" data-i18n="nav_honesty">Honesty</a>
       <a href="#roadmap" data-i18n="nav_roadmap">Roadmap</a>
@@ -186,11 +187,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
   <!-- ================= HERO ================= -->
   <section class="hero">
     <div class="wrap">
-      <p class="eyebrow" data-i18n="hero_eyebrow">PARALLEL BIT CHAIN · GPU-NATIVE PROOF OF WORK</p>
+      <p class="eyebrow" data-i18n="hero_eyebrow">PARALLEL BIT CHAIN · PROOF OF WORK FOR THE MACHINE ECONOMY</p>
       <h1 class="hero-mark" aria-label="PTC — Parallel Bit Chain" title="b ⇅ p"><span class="flip-b">b</span>tc</h1>
       <div class="mirror-line" aria-hidden="true"><span class="ml-seg"></span><span class="ml-badge">b ⇅ p</span><span class="ml-seg"></span></div>
-      <h2 class="hero-head" data-i18n="hero_head">BTC, flipped — same ledger, opposite proof of work.</h2>
-      <p class="hero-sub" data-i18n="hero_sub">A GPU-native PoW chain that keeps Bitcoin's ledger semantics exactly — UTXO, 10-minute blocks, 21 million coins, four-year halvings — and replaces only the proof of work. Not “banning ASICs” (impossible), but making an ASIC a worse deal than a graphics card.</p>
+      <h2 class="hero-head" data-i18n="hero_head">BTC, flipped — humans on Bitcoin, agents on PTC.</h2>
+      <p class="hero-sub" data-i18n="hero_sub">A GPU-native PoW chain that keeps Bitcoin's ledger semantics exactly — UTXO, 10-minute blocks, 21 million coins, four-year halvings — and flips two things: the proof of work (an ASIC must lose to a graphics card) and the subject (this is where autonomous agents settle, budget, and notarize).</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/whitepaper/ptc-whitepaper-en.md" target="_blank" rel="noopener" data-i18n="hero_cta_wp">Read the whitepaper</a>
         <a class="btn btn-ghost" href="https://github.com/adfoke/parallel-bit-chain" target="_blank" rel="noopener">GitHub ↗</a>
@@ -215,8 +216,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow" data-i18n="mir_eyebrow">01 · THE MIRROR</p>
-        <h2 data-i18n="mir_h2">One axis identical. One axis inverted.</h2>
-        <p class="lead" data-i18n="mir_lead">Flip a lowercase b and you get a p. PTC keeps Bitcoin's ledger untouched and flips its proof of work — that is the whole project.</p>
+        <h2 data-i18n="mir_h2">Same ledger. Opposite proof. Mirrored subject.</h2>
+        <p class="lead" data-i18n="mir_lead">Flip a lowercase b and you get a p. Bitcoin is humanity's chain; PTC is its mirror — the same ledger discipline, an opposite proof of work, and a mirrored subject: the machine economy.</p>
       </div>
       <div class="mirror-grid">
         <div class="m-badge" aria-hidden="true">b ⇅ p</div>
@@ -240,17 +241,47 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
             <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_3">Scheduled algorithm rotation via algo_version</span></li>
             <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_4">128-byte header with algo_version + mix_digest</span></li>
             <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_5">Mining economics: buy a GPU, don't tape out an ASIC</span></li>
+            <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_6">The subject: humans settle on Bitcoin — agents settle on PTC</span></li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= GEYSER ================= -->
-  <section id="geyser" class="sec sec-alt">
+  <!-- ================= AI-NATIVE ================= -->
+  <section id="ai" class="sec sec-alt">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow" data-i18n="gey_eyebrow">02 · GEYSER · PROOF OF WORK</p>
+        <p class="eyebrow" data-i18n="ai_eyebrow">02 · AI-NATIVE</p>
+        <h2 data-i18n="ai_h2">Three things an agent can't get elsewhere</h2>
+        <p class="lead" data-i18n="ai_lead">Agents are natively keypairs — no passport, no bank account, 24/7, APIs for senses. They don't need another smart-contract casino; they need settlement they can budget against, and a notary for their records. Demand-side positioning, zero consensus changes.</p>
+      </div>
+      <div class="cards3">
+        <article class="card">
+          <p class="card-no">01</p>
+          <h3 data-i18n="ai_c1_h">Headless-first tooling</h3>
+          <p data-i18n="ai_c1_b">Agents have no screens. Wallets, node APIs, mining protocols: APIs before GUIs. A headless wallet SDK ships with the reference stack in P1 — the GUI is the compatibility layer, not the entrance.</p>
+        </article>
+        <article class="card">
+          <p class="card-no">02</p>
+          <h3 data-i18n="ai_c2_h">Money an agent can budget against</h3>
+          <p data-i18n="ai_c2_b">21,000,000 cap, halving schedule fixed at genesis, a script subset with no DeFi casino. Predictable monetary policy is a feature for machine cost functions — that is what Bitcoin-isomorphism buys.</p>
+        </article>
+        <article class="card">
+          <p class="card-no">03</p>
+          <h3 data-i18n="ai_c3_h">The machine notary</h3>
+          <p data-i18n="ai_c3_b">Model cards, inference commitments, training-data fingerprints, agent logs — hashed via OP_RETURN, anchored routinely on PTC and terminally on Bitcoin. The machine economy periodically notarizes itself into humanity's ledger.</p>
+        </article>
+      </div>
+      <div class="target-strip"><span data-i18n="ai_not">Not building: a smart-contract platform (agents are their own runtimes) · an “AI governance token” · on-chain “verified intelligence” — the chain verifies hashes and signatures, not intent. Zero consensus bytes changed.</span></div>
+    </div>
+  </section>
+
+  <!-- ================= GEYSER ================= -->
+  <section id="geyser" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="gey_eyebrow">03 · GEYSER · PROOF OF WORK</p>
         <h2 data-i18n="gey_h2">Three layers between ASICs and your GPU</h2>
       </div>
       <div class="cards3">
@@ -275,10 +306,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
   </section>
 
   <!-- ================= HONESTY ================= -->
-  <section id="honesty" class="sec">
+  <section id="honesty" class="sec sec-alt">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow" data-i18n="hon_eyebrow">03 · HONEST ENGINEERING</p>
+        <p class="eyebrow" data-i18n="hon_eyebrow">04 · HONEST ENGINEERING</p>
         <h2 data-i18n="hon_h2">What we don't claim</h2>
         <p class="lead" data-i18n="hon_lead">A chain that hides its trade-offs is marketing, not engineering. The ugly parts are written down, with numbers, in the docs.</p>
       </div>
@@ -312,10 +343,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
   </section>
 
   <!-- ================= ROADMAP ================= -->
-  <section id="roadmap" class="sec sec-alt">
+  <section id="roadmap" class="sec">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow" data-i18n="rmp_eyebrow">04 · ROADMAP</p>
+        <p class="eyebrow" data-i18n="rmp_eyebrow">05 · ROADMAP</p>
         <h2 data-i18n="rmp_h2">Four phases, no shortcuts</h2>
       </div>
       <ol class="phases">
@@ -325,7 +356,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
         </li>
         <li class="phase">
           <div class="ph-tag"><span class="ph-no">P1</span></div>
-          <div><h3 data-i18n="rmp_p1_h">Full node &amp; miners</h3><p data-i18n="rmp_p1_b">Go full node, CUDA and ROCm miners, Stratum v2.</p></div>
+          <div><h3 data-i18n="rmp_p1_h">Full node &amp; miners</h3><p data-i18n="rmp_p1_b">Go full node, CUDA and ROCm miners, Stratum v2, headless wallet SDK (agent-first).</p></div>
         </li>
         <li class="phase">
           <div class="ph-tag"><span class="ph-no">P2</span></div>
@@ -343,7 +374,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
   <div class="wrap">
-    <p class="f-tag" data-i18n="ft_tag">No premine. No dev tax. No presale. No exceptions.</p>
+    <p class="f-tag" data-i18n="ft_tag">No premine. No dev tax. No presale. No AI theater. No exceptions.</p>
     <nav class="f-links">
       <a href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/whitepaper/ptc-whitepaper-en.md" target="_blank" rel="noopener" data-i18n="ft_wp_en">Whitepaper · EN (canonical)</a>
       <a href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/whitepaper/ptc-whitepaper-zh.md" target="_blank" rel="noopener" data-i18n="ft_wp_zh">Whitepaper · 中文</a>
@@ -362,22 +393,22 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
     zh: "PTC — Parallel Bit Chain · 翻过来的 BTC"
   };
   var MD = {
-    en: "A GPU-native, Bitcoin-isomorphic proof-of-work chain. Same ledger as Bitcoin, flipped proof of work. Design stage — P0 spec freeze in progress.",
-    zh: "一条 GPU 原生、Bitcoin 同构的 PoW 公链。账本相同，共识相反。设计阶段 · P0 规范冻结进行中。"
+    en: "A GPU-native, Bitcoin-isomorphic proof-of-work chain for the machine economy. Humans on Bitcoin, agents on PTC. Design stage — P0 spec freeze in progress.",
+    zh: "一条 GPU 原生、Bitcoin 同构、面向机器经济的 PoW 公链。人类用 Bitcoin，AI 用 PTC。设计阶段 · P0 规范冻结进行中。",
   };
   var D = {
     en: {
-      nav_mirror: "Mirror", nav_geyser: "Geyser", nav_honesty: "Honesty", nav_roadmap: "Roadmap",
-      hero_eyebrow: "PARALLEL BIT CHAIN · GPU-NATIVE PROOF OF WORK",
-      hero_head: "BTC, flipped — same ledger, opposite proof of work.",
-      hero_sub: "A GPU-native PoW chain that keeps Bitcoin's ledger semantics exactly — UTXO, 10-minute blocks, 21 million coins, four-year halvings — and replaces only the proof of work. Not “banning ASICs” (impossible), but making an ASIC a worse deal than a graphics card.",
+      nav_mirror: "Mirror", nav_geyser: "Geyser", nav_honesty: "Honesty", nav_roadmap: "Roadmap", nav_ai: "AI-Native",
+      hero_eyebrow: "PARALLEL BIT CHAIN · PROOF OF WORK FOR THE MACHINE ECONOMY",
+      hero_head: "BTC, flipped — humans on Bitcoin, agents on PTC.",
+      hero_sub: "A GPU-native PoW chain that keeps Bitcoin's ledger semantics exactly — UTXO, 10-minute blocks, 21 million coins, four-year halvings — and flips two things: the proof of work (an ASIC must lose to a graphics card) and the subject (this is where autonomous agents settle, budget, and notarize).",
       hero_cta_wp: "Read the whitepaper",
       hero_status: "design stage · P0 spec freeze in progress · no code yet, no coin yet",
       hero_seed_label: "GENESIS COMMITMENT",
       stat1_l: "block interval", stat2_l: "total supply", stat3_l: "blocks per halving", stat4_l: "block header",
       mir_eyebrow: "01 · THE MIRROR",
-      mir_h2: "One axis identical. One axis inverted.",
-      mir_lead: "Flip a lowercase b and you get a p. PTC keeps Bitcoin's ledger untouched and flips its proof of work — that is the whole project.",
+      mir_h2: "Same ledger. Opposite proof. Mirrored subject.",
+      mir_lead: "Flip a lowercase b and you get a p. Bitcoin is humanity's chain; PTC is its mirror — the same ledger discipline, an opposite proof of work, and a mirrored subject: the machine economy.",
       mir_same_h: "IDENTICAL TO BITCOIN",
       mir_flip_h: "FLIPPED",
       mir_same_1: "UTXO transaction model",
@@ -392,7 +423,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       mir_flip_3: "Scheduled algorithm rotation via algo_version",
       mir_flip_4: "128-byte header with algo_version + mix_digest",
       mir_flip_5: "Mining economics: buy a GPU, don't tape out an ASIC",
-      gey_eyebrow: "02 · GEYSER · PROOF OF WORK",
+      mir_flip_6: "The subject: humans settle on Bitcoin — agents settle on PTC",
+      ai_eyebrow: "02 · AI-NATIVE",
+      ai_h2: "Three things an agent can't get elsewhere",
+      ai_lead: "Agents are natively keypairs — no passport, no bank account, 24/7, APIs for senses. They don't need another smart-contract casino; they need settlement they can budget against, and a notary for their records. Demand-side positioning, zero consensus changes.",
+      ai_c1_h: "Headless-first tooling",
+      ai_c1_b: "Agents have no screens. Wallets, node APIs, mining protocols: APIs before GUIs. A headless wallet SDK ships with the reference stack in P1 — the GUI is the compatibility layer, not the entrance.",
+      ai_c2_h: "Money an agent can budget against",
+      ai_c2_b: "21,000,000 cap, halving schedule fixed at genesis, a script subset with no DeFi casino. Predictable monetary policy is a feature for machine cost functions — that is what Bitcoin-isomorphism buys.",
+      ai_c3_h: "The machine notary",
+      ai_c3_b: "Model cards, inference commitments, training-data fingerprints, agent logs — hashed via OP_RETURN, anchored routinely on PTC and terminally on Bitcoin. The machine economy periodically notarizes itself into humanity's ledger.",
+      ai_not: "Not building: a smart-contract platform (agents are their own runtimes) · an “AI governance token” · on-chain “verified intelligence” — the chain verifies hashes and signatures, not intent. Zero consensus bytes changed.",
+      gey_eyebrow: "03 · GEYSER · PROOF OF WORK",
       gey_h2: "Three layers between ASICs and your GPU",
       gey_c1_h: "Bandwidth binding",
       gey_c1_b: "Every hash streams random 8 KiB reads across a 6 GiB dataset. The bottleneck is memory bandwidth — and consumer GPUs are the platform-wide optimum of hashrate per dollar per GB/s. CPUs, FPGAs and AI accelerators are structurally priced out.",
@@ -401,7 +443,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       gey_c3_h: "Rotation covenant",
       gey_c3_b: "algo_version hard-forks the algorithm on a published 2–3 year schedule. GPU miners update software; ASIC tape-outs turn into landfill.",
       gey_target: "Target: ASIC efficiency capped at ≤2× with no payback · dataset ≤60% of median-GPU VRAM (6 GiB today, +32 MiB per epoch)",
-      hon_eyebrow: "03 · HONEST ENGINEERING",
+      hon_eyebrow: "04 · HONEST ENGINEERING",
       hon_h2: "What we don't claim",
       hon_lead: "A chain that hides its trade-offs is marketing, not engineering. The ugly parts are written down, with numbers, in the docs.",
       hon_1_h: "No absolute ASIC immunity",
@@ -416,18 +458,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       hon_5_b: "4M weight units with no growth policy. Throughput belongs on L2; the chain itself carries hashes, not files.",
       hon_6_h: "No quantum theater",
       hon_6_b: "No PQC at genesis — no CRQC exists. The extension points are reserved now and triggered by capability milestones, not by marketing.",
-      rmp_eyebrow: "04 · ROADMAP",
+      rmp_eyebrow: "05 · ROADMAP",
       rmp_h2: "Four phases, no shortcuts",
       rmp_now: "NOW",
       rmp_p0_h: "Spec freeze",
       rmp_p0_b: "Cross-platform test vectors, bit-identical on five platforms — NVIDIA, AMD, Intel, Apple GPU, ARM64 CPU. The whitepaper graduates to v1.0.",
       rmp_p1_h: "Full node & miners",
-      rmp_p1_b: "Go full node, CUDA and ROCm miners, Stratum v2.",
+      rmp_p1_b: "Go full node, CUDA and ROCm miners, Stratum v2, headless wallet SDK (agent-first).",
       rmp_p2_h: "Incentivized testnet",
       rmp_p2_b: "Six-plus months of public testnet, Metal backend for Apple GPUs, dual external audits.",
       rmp_p3_h: "Mainnet",
       rmp_p3_b: "Genesis with signed checkpoints against early private chains. Zero premine, zero dev tax.",
-      ft_tag: "No premine. No dev tax. No presale. No exceptions.",
+      ft_tag: "No premine. No dev tax. No presale. No AI theater. No exceptions.",
       ft_wp_en: "Whitepaper · EN (canonical)",
       ft_wp_zh: "Whitepaper · 中文",
       ft_design: "Design doc",
@@ -436,17 +478,17 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       ft_copy: "© 2026 Parallel Bit Chain contributors"
     },
     zh: {
-      nav_mirror: "镜像", nav_geyser: "Geyser", nav_honesty: "诚实清单", nav_roadmap: "路线图",
-      hero_eyebrow: "PARALLEL BIT CHAIN · GPU 原生工作量证明",
-      hero_head: "翻过来的 BTC —— 账本相同，共识相反。",
-      hero_sub: "一条 GPU 原生的 PoW 公链：账本语义与 Bitcoin 完全一致 —— UTXO、10 分钟出块、2100 万枚、四年减半 —— 只替换工作量证明。不是“禁止 ASIC”（技术上不可能），而是让“造 ASIC”成为比“买显卡”更差的生意。",
+      nav_mirror: "镜像", nav_geyser: "Geyser", nav_honesty: "诚实清单", nav_roadmap: "路线图", nav_ai: "AI 原生",
+      hero_eyebrow: "PARALLEL BIT CHAIN · 面向机器经济的工作量证明",
+      hero_head: "翻过来的 BTC —— 人类用 Bitcoin，AI 用 PTC。",
+      hero_sub: "一条 GPU 原生的 PoW 公链：账本语义与 Bitcoin 完全一致 —— UTXO、10 分钟出块、2100 万枚、四年减半 —— 只翻转两样东西：工作量证明（造 ASIC 必须输给买显卡），与使用主体（这是 AI agent 结算、做预算、办公证的链）。",
       hero_cta_wp: "读白皮书",
       hero_status: "设计阶段 · P0 规范冻结进行中 · 暂无代码 · 暂无币",
       hero_seed_label: "创世承诺",
       stat1_l: "出块间隔", stat2_l: "总量", stat3_l: "每减半块数", stat4_l: "区块头",
       mir_eyebrow: "01 · 镜像",
-      mir_h2: "一条轴完全相同，一条轴完全相反。",
-      mir_lead: "小写的 b 翻过来，就是 p。PTC 保留 Bitcoin 的账本，翻掉它的共识 —— 整个项目就这一句话。",
+      mir_h2: "账本相同，共识相反，主体互为镜像。",
+      mir_lead: "小写的 b 翻过来就是 p。Bitcoin 是人类的链，PTC 是它的镜像 —— 相同的账本纪律、相反的工作量证明，以及相对的使用主体：机器经济。",
       mir_same_h: "与 BITCOIN 相同",
       mir_flip_h: "相反",
       mir_same_1: "UTXO 交易模型",
@@ -461,7 +503,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       mir_flip_3: "algo_version 预定算法轮换",
       mir_flip_4: "128 字节区块头，含 algo_version + mix_digest",
       mir_flip_5: "挖矿经济学：买显卡，别流片",
-      gey_eyebrow: "02 · GEYSER · 工作量证明",
+      mir_flip_6: "使用主体：人类在 Bitcoin 上结算 —— agent 在 PTC 上结算",
+      ai_eyebrow: "02 · AI 原生",
+      ai_h2: "agent 在别处拿不到的三样东西",
+      ai_lead: "agent 天生就是密钥对 —— 无护照、无银行账户、7×24 运行、以 API 为感官。它们不需要又一个智能合约赌场；需要的是能做预算的结算，与一份记录的公证。需求侧定位，零共识改动。",
+      ai_c1_h: "Headless 优先的工具链",
+      ai_c1_b: "agent 没有屏幕。钱包、节点 API、矿池协议：先是 API，再是 GUI。headless 钱包 SDK 随 P1 参考栈交付 —— GUI 是兼容层，不是主入口。",
+      ai_c2_h: "agent 能做预算的货币",
+      ai_c2_b: "2100 万枚上限、减半日程创世写死、无 DeFi 赌场的脚本子集。可预测的货币政策是机器成本函数的特性 —— 这就是 Bitcoin 同构买来的东西。",
+      ai_c3_h: "机器公证处",
+      ai_c3_b: "模型卡、推理承诺、训练数据指纹、agent 行为日志 —— OP_RETURN 放哈希，日常锚 PTC、终局锚 Bitcoin。机器经济定期向人类账本递交公证。",
+      ai_not: "不做：智能合约平台（agent 的运行时就是它们自己）· “AI 治理代币” · 链上“验证智能”的表演 —— 链验证哈希与签名，不验证意图。共识层零字节改动。",
+      gey_eyebrow: "03 · GEYSER · 工作量证明",
       gey_h2: "挡在 ASIC 面前的三层防御",
       gey_c1_h: "带宽绑定",
       gey_c1_b: "每次哈希都在 6 GiB 数据集上随机读取 8 KiB。瓶颈锁死在显存带宽 —— 消费级 GPU 正是全平台 $/GB/s 的最优点；CPU、FPGA、AI 加速器在结构上就被定价出局。",
@@ -470,7 +523,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       gey_c3_h: "算法轮换契约",
       gey_c3_b: "algo_version 按公开的 2–3 年日程硬分叉轮换算法。GPU 矿工更新软件；ASIC 流片直接变废铁。",
       gey_target: "目标：ASIC 效率压制在 ≤2× 且无法回本 · dataset ≤ 同期中位显卡 VRAM 的 60%（当前 6 GiB，每 epoch +32 MiB）",
-      hon_eyebrow: "03 · 诚实工程",
+      hon_eyebrow: "04 · 诚实工程",
       hon_h2: "我们不声称什么",
       hon_lead: "藏着取舍的链是营销，不是工程。难看的部分都带着数字写进了文档。",
       hon_1_h: "没有绝对 ASIC 免疫",
@@ -485,18 +538,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       hon_5_b: "4M 重量单位，无扩容政策。吞吐走 L2；链上只放哈希，不放文件。",
       hon_6_h: "不做量子表演",
       hon_6_b: "创世不放 PQC —— CRQC 还不存在。扩展点现在预留，由能力里程碑触发，而不是营销节点。",
-      rmp_eyebrow: "04 · 路线图",
+      rmp_eyebrow: "05 · 路线图",
       rmp_h2: "四个阶段，没有捷径",
       rmp_now: "当前",
       rmp_p0_h: "规范冻结",
       rmp_p0_b: "跨平台测试向量五方位级一致：NVIDIA、AMD、Intel、Apple GPU、ARM64 CPU。白皮书升 v1.0。",
       rmp_p1_h: "全节点与矿工",
-      rmp_p1_b: "Go 全节点、CUDA/ROCm 矿工、Stratum v2。",
+      rmp_p1_b: "Go 全节点、CUDA/ROCm 矿工、Stratum v2、headless 钱包 SDK（agent-first）。",
       rmp_p2_h: "激励测试网",
       rmp_p2_b: "公开测试网 ≥6 个月、Apple GPU 的 Metal 后端、双外部审计。",
       rmp_p3_h: "主网",
       rmp_p3_b: "创世块带签名 checkpoint，防早期私有链。零预挖、零 dev tax。",
-      ft_tag: "零预挖 · 零 dev tax · 无预售 · 无例外。",
+      ft_tag: "零预挖 · 零 dev tax · 无预售 · 无 AI 表演 · 无例外。",
       ft_wp_en: "白皮书 · 英文（canonical）",
       ft_wp_zh: "白皮书 · 中文",
       ft_design: "设计文档",
