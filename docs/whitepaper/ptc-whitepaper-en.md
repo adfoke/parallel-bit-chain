@@ -1,4 +1,4 @@
-# GTC (GPU Chain): A GPU-Native, Bitcoin-Isomorphic Proof-of-Work Blockchain
+# PTC (Parallel Bit Chain): A GPU-Native, Bitcoin-Isomorphic Proof-of-Work Blockchain
 
 **Whitepaper Draft v0.9 · August 2026**
 
@@ -10,7 +10,7 @@
 
 ## Abstract
 
-GTC is a Nakamoto-consensus proof-of-work blockchain that reproduces Bitcoin's ledger semantics — UTXO model, 600-second blocks, 21,000,000-unit supply with 210,000-block halvings, 2016-block difficulty retargeting — and replaces only the proof-of-work function.
+PTC is a Nakamoto-consensus proof-of-work blockchain that reproduces Bitcoin's ledger semantics — UTXO model, 600-second blocks, 21,000,000-unit supply with 210,000-block halvings, 2016-block difficulty retargeting — and replaces only the proof-of-work function.
 
 The algorithm, **Geyser**, is engineered so that the economically rational mining device is a commodity consumer GPU. Each hash performs 64 rounds of 128-byte random accesses into a 6 GiB epoch dataset (8 KiB per hash), binding throughput to memory bandwidth; and executes a 256-instruction program of mixed integer and IEEE-754 floating-point operations regenerated from the previous block hash, binding efficiency to general-purpose execution units.
 
@@ -53,14 +53,14 @@ Everything except the proof-of-work and an extended header reproduces Bitcoin.
 | Consensus | Nakamoto longest-chain | same |
 | Target block interval | 600 s | same |
 | Difficulty retarget | every 2016 blocks, BTC formula, ±4× clamp | same |
-| Initial subsidy | 50 GTC | same |
+| Initial subsidy | 50 PTC | same |
 | Halving | every 210,000 blocks (~4 y) | same |
-| Total supply | 21,000,000 GTC | same |
+| Total supply | 21,000,000 PTC | same |
 | Coinbase maturity | 100 blocks | same |
 | Block weight limit | 4,000,000 WU (SegWit discounting) | same |
 | Ledger | UTXO | same |
 | Default signature | Schnorr (BIP340), ECDSA accepted | Taproot semantics |
-| Addresses | Bech32m, HRP `gtc` | format same |
+| Addresses | Bech32m, HRP `ptc` | format same |
 | Script | tapscript v1 whitelist, incl. CLTV/CSV; bare multisig replaced by key aggregation (MuSig2-style); MUL/DIV/CAT deferred | superset policy |
 | OP_RETURN carrier | 1 output, ≤ 80 bytes (policy, not consensus) | same |
 
@@ -110,7 +110,7 @@ Random dataset traffic per hash: 64 × 128 B = **8 KiB**. On an RTX 5090 (1.79 T
 ### 3.2 Epoch dataset (two-level structure)
 
 ```
-epoch_seed(0) = keccak256("GTC/mainnet/genesis-seed-v1")
+epoch_seed(0) = keccak256("PTC/mainnet/genesis-seed-v1")
 epoch_seed(e) = keccak256(epoch_seed(e-1))
 
 cache(e)      = gen_cache(epoch_seed(e))     # 48 MiB, Argon2id-style sequential KDF
@@ -269,19 +269,19 @@ The threat surfaces are asymmetric: proof-of-work and signatures differ by more 
 | v1 | P2TR (default) | key exposed at creation | everyday use (cheapest) |
 | v2 | reserved: ML-DSA-65 primary, SLH-DSA-128s conservative | quantum-secure | activated as CRQC approaches |
 
-No PQC enters consensus at genesis: there is no CRQC; ML-DSA-65 costs ~4–5× input weight after the witness discount; implementations and wallet tooling are still maturing. Activation is triggered by objective capability milestones (e.g., fault-tolerant machines at ≥10^3 logical qubits, or accelerated NIST/CNSA deprecation schedules), executed as a consensus-internal scheduled fork — the same mechanism as `algo_version` — and migrated via hybrid dual signatures (Schnorr + ML-DSA) so no coin is left behind. GTC is engineered as a century-scale store of value; the signature planning horizon is the asset's lifetime, which is exactly why the extension points are reserved now rather than retrofitted later. keccak-256 retains 2^128 quantum preimage security and needs no rotation.
+No PQC enters consensus at genesis: there is no CRQC; ML-DSA-65 costs ~4–5× input weight after the witness discount; implementations and wallet tooling are still maturing. Activation is triggered by objective capability milestones (e.g., fault-tolerant machines at ≥10^3 logical qubits, or accelerated NIST/CNSA deprecation schedules), executed as a consensus-internal scheduled fork — the same mechanism as `algo_version` — and migrated via hybrid dual signatures (Schnorr + ML-DSA) so no coin is left behind. PTC is engineered as a century-scale store of value; the signature planning horizon is the asset's lifetime, which is exactly why the extension points are reserved now rather than retrofitted later. keccak-256 retains 2^128 quantum preimage security and needs no rotation.
 
 ---
 
 ## 7. Data Anchoring (Neutrality Policy)
 
-GTC is content-neutral at consensus. Chain-embedded data cannot meaningfully be censored (witness signature grinding embeds arbitrary bits) — so, like Bitcoin, the chain *channels* data demand into the most harmless carrier rather than pretending to prevent it:
+PTC is content-neutral at consensus. Chain-embedded data cannot meaningfully be censored (witness signature grinding embeds arbitrary bits) — so, like Bitcoin, the chain *channels* data demand into the most harmless carrier rather than pretending to prevent it:
 
 - **OP_RETURN policy**: one output per transaction, ≤ 80-byte payload (mempool policy, not consensus — adjustable without a fork). 80 B fits a 32-byte digest + protocol tag + metadata, and is byte-compatible with OpenTimestamps attachment format.
 - OP_RETURN outputs are unspendable → **zero UTXO pollution** (without the policy, users embed data in fake P2PKH outputs, which do pollute).
 - **Aggregation pattern**: N evidence hashes → Merkle tree → root on-chain. A saturated block carries 0.6–0.9M bare anchors/day; with aggregation the limit is fees, not capacity.
-- **Credibility boundary, stated honestly**: evidentiary weight tracks the anchoring chain's own credibility; a new chain is weaker than Bitcoin. The recommended pattern is **dual anchoring** — high-frequency anchoring on GTC (cheap), periodic terminal anchoring on Bitcoin — at zero additional design cost via OTS compatibility.
-- Raw files never go on-chain; privacy and content compliance stay off-chain. GTC carries hashes, not content, and assumes no regulatory surface.
+- **Credibility boundary, stated honestly**: evidentiary weight tracks the anchoring chain's own credibility; a new chain is weaker than Bitcoin. The recommended pattern is **dual anchoring** — high-frequency anchoring on PTC (cheap), periodic terminal anchoring on Bitcoin — at zero additional design cost via OTS compatibility.
+- Raw files never go on-chain; privacy and content compliance stay off-chain. PTC carries hashes, not content, and assumes no regulatory surface.
 
 Anchoring is fee-paying, UTXO-neutral, and independent of token speculation — a sustainable fee source for the long-term security budget as subsidy decays.
 
@@ -302,7 +302,7 @@ Anchoring is fee-paying, UTXO-neutral, and independent of token speculation — 
 
 ## 9. Token Economics
 
-Deliberately Bitcoin-identical: 50 GTC genesis subsidy, halving every 210,000 blocks, terminal supply 21,000,000 GTC, 100-block coinbase maturity. 144 blocks/day → 7,200 GTC/day first-year emission. Simplicity is the feature: no new emission schedule to argue about, one security-budget curve, one fee market. Long-term security is carried by fee demand (transaction fees + anchoring demand, §7) against declining subsidy — the same equilibrium Bitcoin faces, faced honestly rather than re-engineered.
+Deliberately Bitcoin-identical: 50 PTC genesis subsidy, halving every 210,000 blocks, terminal supply 21,000,000 PTC, 100-block coinbase maturity. 144 blocks/day → 7,200 PTC/day first-year emission. Simplicity is the feature: no new emission schedule to argue about, one security-budget curve, one fee market. Long-term security is carried by fee demand (transaction fees + anchoring demand, §7) against declining subsidy — the same equilibrium Bitcoin faces, faced honestly rather than re-engineered.
 
 ---
 
