@@ -3,22 +3,23 @@
   "$id": "https://pitchain.dev/p0/schema/manifest.schema.json",
   "title": "P0 vector manifest",
   "type": "object",
-  "required": ["format_version", "profile", "algo_version", "epoch", "epoch_seed", "program_seed", "dataset", "samples", "generator"],
+  "required": ["format_version", "profile", "dataset_profile", "algo_version", "epoch", "epoch_seed", "program_seed", "dataset", "samples", "generator"],
   "additionalProperties": false,
   "properties": {
     "format_version": { "const": 1 },
     "profile": { "enum": ["smoke", "full"] },
+    "dataset_profile": { "enum": ["full-v1", "smoke-v1"] },
     "algo_version": { "type": "integer", "minimum": 1 },
     "epoch": { "type": "integer", "minimum": 0 },
     "epoch_seed": {
-      "description": "null = 未冻结（TODO#1）；冻结后为 32B hex",
+      "description": "epoch 0 冻结值 0x05bc07f7…cb557ba（决议 #1）；非 0 epoch 或未来 algo_version 允许 null = 未定",
       "oneOf": [
         { "type": "null" },
         { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" }
       ]
     },
     "program_seed": {
-      "description": "null = 未冻结（TODO#3）；冻结后为 32B hex",
+      "description": "P0 冻结值 0xbce3f761…68da732a（决议 #3）；null = 未定",
       "oneOf": [
         { "type": "null" },
         { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" }

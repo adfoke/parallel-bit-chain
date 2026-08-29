@@ -16,3 +16,30 @@ jobs:
           python-version: "3.12"
       - name: P0 skeleton smoke (vector gen + verifier self-test)
         run: cd p0 && make smoke
+      - name: Manifest schema check (smoke vectors)
+        run: |
+          pip install jsonschema
+          python - << 'EOF'
+          import json, jsonschema
+          m = json.load(open("p0/vectors/smoke/manifest.json"))
+          s = json.load(open("p0/schema/manifest.schema.json"))
+          jsonschema.validate(m, s)
+          print("manifest schema: OK")
+          EOF
+
+  ref:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: p0/ref/go.mod
+      - name: Vet + test (keccak & frozen constants)
+        run: go vet ./... && go test ./...
+        working-directory: p0/ref
+      - name: CLI sanity (frozen constants stable)
+        run: |
+          test "$(./geyser epoch-seed)" = "05bc07f76525e02d921bdf17412b8037dbd3f4324e02cf2ad2f03fa68cb557ba"
+          test "$(./geyser program-seed)" = "bce3f7616c64866be6509888369e5bad7e655e05efa10f154e6b691a68da732a"
+          echo "frozen constants: OK"
+        working-directory: p0/ref

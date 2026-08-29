@@ -7,9 +7,9 @@ generator.algorithm = sha256-counter-v1:
     header(i) = b0‖b1‖b2‖b3 截取 128B（tag="header"）
     nonce(i)  = sha256(f"{seed}|{i}|nonce")[:8]
 
-字段约束（向量协议，见 p0/README.md）：
-    header[76:84]   nonce 字段，与 nonce(i) 同值（TODO#4）
-    header[84:86]   algo_version，小端（TODO#2 字节序未冻结）
+字段约束（向量协议，见 p0/README.md；TODO#2/#4 已冻结）：
+    header[76:84]   nonce 字段，与 nonce(i) 同值（nonce 在哈希输入中出现两次，冻结）
+    header[84:86]   algo_version，小端 LE（冻结）
     header[86:118]  mix_digest = 0（哈希输入要求）
     header[118:128] reserved = 0
 """
@@ -34,6 +34,19 @@ APPENDIX_A = {
     "REGISTERS": "64 x u32 + 64 x f32 per lane",
     "HASH_INIT": "keccak512",
     "HASH_FINAL": "keccak256",
+}
+
+# 2026-08-29 冻结常量（p0/README.md 决议表；ref/internal/constants 回归钉死）
+EPOCH_SEED_V0 = "0x05bc07f76525e02d921bdf17412b8037dbd3f4324e02cf2ad2f03fa68cb557ba"
+PROGRAM_SEED_P0 = "0xbce3f7616c64866be6509888369e5bad7e655e05efa10f154e6b691a68da732a"
+
+# dataset profile（p0/README.md TODO#5 决议）：
+#   full-v1   = canonical（DESIGN 附录 A 原值），冻结验收唯一有效档
+#   smoke-v1  = 缩容档（仅 CI/开发冒烟，非 canonical）：256 MiB / 2 MiB，
+#               代码路径与 full-v1 完全一致，仅 N_items 缩小
+DATASET_PROFILES = {
+    "full-v1": {},
+    "smoke-v1": {"DATASET_BYTES_INIT": 268435456, "CACHE_BYTES_INIT": 2097152},
 }
 
 
@@ -66,25 +79,40 @@ def main() -> None:
     ap.add_argument("--seed", default="p0-smoke-1")
     ap.add_argument("--out-dir", default="vectors/smoke")
     ap.add_argument("--profile", choices=["smoke", "full"], default="smoke")
+    ap.add_argument("--dataset-profile", choices=["full-v1", "smoke-v1"], default=None,
+                    help="缺省按 --profile 自动：smoke→smoke-v1，full→full-v1")
     ap.add_argument("--algo-version", type=int, default=1)
     ap.add_argument("--epoch", type=int, default=0)
+    ap.add_argument("--epoch-seed", default=None,
+                    help="32B hex；缺省用冻结常量 EPOCH_SEED_V0（epoch=0）")
     ap.add_argument("--program-seed", default=None,
-                    help="32B hex；缺省 null（TODO#3：ref 冻结时回填）")
+                    help="32B hex；缺省用冻结常量 PROGRAM_SEED_P0")
     args = ap.parse_args()
 
     if args.profile == "full" and args.count < 1_000_000:
         print(f"[warn] full profile 建议 count >= 10^6（当前 {args.count}）")
+
+    dataset_profile = args.dataset_profile or ("smoke-v1" if args.profile == "smoke" else "full-v1")
+    dataset = dict(APPENDIX_A)
+    dataset.update(DATASET_PROFILES[dataset_profile])
+
+    epoch_seed = args.epoch_seed or (EPOCH_SEED_V0 if args.epoch == 0 else None)
+    program_seed = args.program_seed or PROGRAM_SEED_P0
+    if epoch_seed is None:
+        print(f"[fatal] epoch={args.epoch} 无冻结常量，必须显式 --epoch-seed")
+        raise SystemExit(2)
 
     os.makedirs(args.out_dir, exist_ok=True)
 
     manifest = {
         "format_version": 1,
         "profile": args.profile,
+        "dataset_profile": dataset_profile,
         "algo_version": args.algo_version,
         "epoch": args.epoch,
-        "epoch_seed": None,             # TODO#1：keccak256("PTC/mainnet/genesis-seed-v1")，ref 回填
-        "program_seed": args.program_seed,  # TODO#3
-        "dataset": APPENDIX_A,
+        "epoch_seed": epoch_seed,
+        "program_seed": program_seed,
+        "dataset": dataset,
         "samples": args.count,
         "generator": {
             "tool": "p0/harness/gen_inputs.py",

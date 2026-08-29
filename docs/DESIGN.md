@@ -1,6 +1,6 @@
 # PTC 设计文档
 
-**版本:** v0.3.9 (mempool 政策包敲定 + L2 readiness + 工程对比文档)
+**版本:** v0.3.10 (P0 冻结常量落地：epoch_seed 计算回填)
 **日期:** 2026-08-29
 **状态:** 未决问题已全部定稿（§12 决议记录）；新增 §7.5 统一内存架构（UMA）影响评估——共识参数零改动
 
@@ -673,6 +673,8 @@ Apple Silicon（M 系列）、AMD Strix Halo、Snapdragon X 等 SoC 让 CPU/GPU 
 
 ```
 EPOCH_BLOCKS        = 2016
+epoch_seed(0)       = keccak256("PTC/mainnet/genesis-seed-v1")
+                    = 0x05bc07f76525e02d921bdf17412b8037dbd3f4324e02cf2ad2f03fa68cb557ba
 DATASET_BYTES_INIT  = 6 GiB
 DATASET_GROWTH      = 32 MiB / epoch      (≈ 0.83 GiB/年)
 CACHE_BYTES_INIT    = 48 MiB              (= DATASET / 128)
@@ -713,4 +715,4 @@ KDF (cache)         = Argon2id 风格顺序混合
 
 ---
 
-*v0.3.9：新增 §4.7 Mempool 政策（默认政策包：opt-in RBF / CPFP / package relay / TRUC + ephemeral anchors）与 §4.8 L2 readiness（通道绿 / rollup 红 / eltoo 延后 / 微支付归通道）；决议 +§12-8；新增 docs/COMPARISON.md 工程对比（PTC×BTC 五层）；P1 交付物/验收补 mempool 政策包实现与功能测试。v0.3.8：§1.5 补命名词源学与书写规则（Coin⇅Chain / b⇅p 双重翻转 = pitchain.dev；正式名保持 Parallel Bit Chain，“Bit Chain” 恒拆两词，连写形态仅存于 wordmark hover）。v0.3.7：AI-native 重定位 —— 人类用 BTC，AI 用 PTC：新增 §1.5（需求侧定位、零共识改动、三承诺与三不做）；P1 交付物 +headless 钱包 SDK；§4.6 战略注脚补机器公证叙事；决议记录 +§12-7。v0.3.6：项目更名 —— 链名与 ticker 由 GTC（GPU Chain）改为 PTC（Parallel Bit Chain）；HRP `gtc`→`ptc`，genesis-seed 前缀 `GTC/`→`PTC/`；白皮书文件更名為 ptc-whitepaper-{en,zh}.md；决议记录 +§12-6。于 P0 规范冻结前执行，无测试向量与代码迁移成本。v0.3.5：新增 §7.7 抗量子评估（PoW 结构性抵抗/QRAM 论证、签名暴露分类、输出类型阶梯 v0/v1/v2、里程碑触发与混合迁移）、风险表 +R12、§4.5 输出类型阶梯。v0.3.4：白皮书双语草案 v0.9 就绪（docs/whitepaper/，英文为 canonical），v1.0 于 P0 出口发布。v0.3.3：新增 §7.6 AI 数据中心与租用算力威胁评估（挖矿 5–9x 劣势、短租攻击算例、闲置机队情景）、R4/R8 更新。v0.3.2：新增 §4.6 数据载体与存证（OP_RETURN 80B 政策、锚定架构、双锚定公信力边界）、风险表 +R11。v0.3.1：新增 §4.3 区块大小与吞吐。v0.3：v0.2 基础上新增 §7.5 UMA 影响评估（共识参数零改动）、§7.1 UMA 平台数据、§6.3 双中位曲线容量政策、五方测试平台与 Metal 后端路线。数值参数在 P0 规范冻结（测试向量发布）前仍可微调，结构决策（三层防御、VRAM 政策、版本轮换）为长期承诺。*
+*v0.3.10：附录 A 钉入 epoch_seed(0) 计算值（ref Go keccak 落地，原版 0x01 padding，已知答案回归验证）；P0 五个 TODO 清零（epoch_seed 值 / algo_version LE / program_seed=prev_hash 映射+向量常量 / nonce 双现 / smoke-v1 缩容档），详见 p0/README.md 决议记录。v0.3.9：新增 §4.7 Mempool 政策（默认政策包：opt-in RBF / CPFP / package relay / TRUC + ephemeral anchors）与 §4.8 L2 readiness（通道绿 / rollup 红 / eltoo 延后 / 微支付归通道）；决议 +§12-8；新增 docs/COMPARISON.md 工程对比（PTC×BTC 五层）；P1 交付物/验收补 mempool 政策包实现与功能测试。v0.3.8：§1.5 补命名词源学与书写规则（Coin⇅Chain / b⇅p 双重翻转 = pitchain.dev；正式名保持 Parallel Bit Chain，“Bit Chain” 恒拆两词，连写形态仅存于 wordmark hover）。v0.3.7：AI-native 重定位 —— 人类用 BTC，AI 用 PTC：新增 §1.5（需求侧定位、零共识改动、三承诺与三不做）；P1 交付物 +headless 钱包 SDK；§4.6 战略注脚补机器公证叙事；决议记录 +§12-7。v0.3.6：项目更名 —— 链名与 ticker 由 GTC（GPU Chain）改为 PTC（Parallel Bit Chain）；HRP `gtc`→`ptc`，genesis-seed 前缀 `GTC/`→`PTC/`；白皮书文件更名為 ptc-whitepaper-{en,zh}.md；决议记录 +§12-6。于 P0 规范冻结前执行，无测试向量与代码迁移成本。v0.3.5：新增 §7.7 抗量子评估（PoW 结构性抵抗/QRAM 论证、签名暴露分类、输出类型阶梯 v0/v1/v2、里程碑触发与混合迁移）、风险表 +R12、§4.5 输出类型阶梯。v0.3.4：白皮书双语草案 v0.9 就绪（docs/whitepaper/，英文为 canonical），v1.0 于 P0 出口发布。v0.3.3：新增 §7.6 AI 数据中心与租用算力威胁评估（挖矿 5–9x 劣势、短租攻击算例、闲置机队情景）、R4/R8 更新。v0.3.2：新增 §4.6 数据载体与存证（OP_RETURN 80B 政策、锚定架构、双锚定公信力边界）、风险表 +R11。v0.3.1：新增 §4.3 区块大小与吞吐。v0.3：v0.2 基础上新增 §7.5 UMA 影响评估（共识参数零改动）、§7.1 UMA 平台数据、§6.3 双中位曲线容量政策、五方测试平台与 Metal 后端路线。数值参数在 P0 规范冻结（测试向量发布）前仍可微调，结构决策（三层防御、VRAM 政策、版本轮换）为长期承诺。*

@@ -1,6 +1,6 @@
 # 参考实现（ref，Go）
 
-**状态：未实现** —— 本目录暂无代码。参考实现是 P0 的第二顺位交付（仅次于骨架本身）。
+**状态：第 1/4 步已落地（2026-08-29）** —— keccak（原版 0x01 padding，已知答案 + 冻结值回归钉）+ 冻结常量（epoch_seed / program_seed，五 TODO 清零）；`cmd/geyser` 可执行（epoch-seed / program-seed / keccak256 / keccak512）。dataset/program/lane core/golden 生成未实现。
 
 ## 职责
 

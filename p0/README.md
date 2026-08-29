@@ -45,9 +45,10 @@ p0/
 | `profile` | `smoke`（进 git，~1k 样本）/ `full`（≥10^6，release artifact） |
 | `algo_version` | Geyser 算法版本（DESIGN §6.6） |
 | `epoch` | 测试所用 epoch（从 0 开始） |
-| `epoch_seed` | epoch 种子（**null = 未冻结**，见 TODO#1） |
-| `program_seed` | 程序层派生种子（**null = 未冻结**，见 TODO#3） |
-| `dataset` | 附录 A 参数总表原样快照（EPOCH_BLOCKS / DATASET_BYTES_INIT / …） |
+| `epoch_seed` | epoch 种子；epoch 0 冻结值 = `keccak256("PTC/mainnet/genesis-seed-v1")` = `0x05bc07f7…cb557ba`（决议 #1） |
+| `program_seed` | 程序层种子；P0 冻结值 = `keccak256("PTC/p0/program-seed-v1")` = `0xbce3f761…68da732a`（决议 #3；生产映射 = prev_hash） |
+| `dataset_profile` | `full-v1`（canonical，DESIGN 附录 A 原值）/ `smoke-v1`（缩容档 256 MiB/2 MiB，仅 CI/开发，决议 #5） |
+| `dataset` | 按所选 profile 生效的参数快照（EPOCH_BLOCKS / DATASET_BYTES_INIT / …） |
 | `samples` | 样本数 |
 | `generator` | `{tool, seed, algorithm}`——重生成输入集所需的全部信息 |
 
@@ -75,19 +76,19 @@ seed_state = HASH_INIT(header_128B || nonce_8B)      # keccak512
 - `program` 由 `manifest.program_seed` 按 §6.4 派生；
 - dataset 由 runner 从 `epoch_seed` + `dataset` 参数**确定性重建**（Argon2id 风格 KDF，§6.2），禁止从网络或未校验的缓存获取。
 
-## 未决项（P0 冻结前必须清零）
+## 决议记录（原未决项，2026-08-29 ref 第一步落地时清零）
 
-| # | 事项 | 说明 |
+| # | 事项 | 决议 |
 |---|---|---|
-| TODO#1 | `epoch_seed(0)` 常量值 | 规范已定为 `keccak256("PTC/mainnet/genesis-seed-v1")`，但 keccak 非 NIST SHA3，Python stdlib 算不了；由 ref（Go）落地时计算并回填 manifest |
-| TODO#2 | `algo_version` 字节序 | header offset 84 的 2 字节，LE 还是 BE 未冻结；生成器当前写 LE |
-| TODO#3 | `program_seed` 派生源 | §6.4 说程序由上块哈希生成；向量协议用 `manifest.program_seed` 解耦。冻结时确认映射（真实场景 program_seed = prev_hash）并回填非 null 值 |
-| TODO#4 | header 内 nonce 与附加 nonce 的关系 | 当前按 §6.1 字面执行：hash 输入 = 128B header ‖ 8B nonce（nonce 出现两次） |
-| TODO#5 | 缩容 dataset profile | smoke 也要生成 6 GiB dataset 才能出 golden；是否引入 reduced-size profile（仅供冒烟，非 canonical）待定 |
+| TODO#1 | `epoch_seed(0)` 常量值 | `keccak256("PTC/mainnet/genesis-seed-v1")` = `0x05bc07f76525e02d921bdf17412b8037dbd3f4324e02cf2ad2f03fa68cb557ba`（ref Go keccak 实现，原版 0x01 padding；已知答案向量 + 冻结值回归钉双验证；同步钉入 DESIGN 附录 A） |
+| TODO#2 | `algo_version` 字节序 | **小端 LE**（与 header 其余整数字段的 Bitcoin 序列化惯例一致；生成器已按 LE，冻结） |
+| TODO#3 | `program_seed` 派生源 | 生产映射 = **prev_hash**（§6.4）；向量集代入冻结常量 `keccak256("PTC/p0/program-seed-v1")` = `0xbce3f7616c64866be6509888369e5bad7e655e05efa10f154e6b691a68da732a`。每个向量集一个 program；多变体 program 留作后续向量集 |
+| TODO#4 | header 内 nonce 双现 | 冻结现状：hash 输入 = 128B header ‖ 8B nonce，header[76:84] 与附加 nonce 同值（nonce 在种子材料中出现两次），对齐 §6.1 字面 |
+| TODO#5 | 缩容 dataset profile | 引入 `dataset_profile`：`smoke-v1` = 256 MiB dataset / 2 MiB cache（比例保持 /128，其余参数与代码路径完全同 full-v1，仅 N_items 缩小；**非 canonical，仅 CI/开发**）；冻结验收唯一有效档仍为 `full-v1`（6 GiB） |
 
 ## 冻结清单（golden/FREEZE.md）
 
-1. [ ] TODO#1–#5 全部清零，manifest 无 null 字段
+1. [x] TODO#1–#5 全部清零（2026-08-29，决议记录见上）；golden 生成时复核 manifest 无 null 字段
 2. [ ] ref 生成 smoke + full golden；smoke 进 git，full 进 release artifact 并记录 SHA256
 3. [ ] 五平台各跑满 full profile，`verify.py` 全绿
 4. [ ] 平台/环境矩阵（GPU 型号、驱动、编译器版本）记入 FREEZE.md
