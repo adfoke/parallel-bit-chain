@@ -1,6 +1,6 @@
 # PTC 设计文档
 
-**版本:** v0.3.8 (命名词源学：Coin⇅Chain 与 pitchain 变换)
+**版本:** v0.3.9 (mempool 政策包敲定 + L2 readiness + 工程对比文档)
 **日期:** 2026-08-29
 **状态:** 未决问题已全部定稿（§12 决议记录）；新增 §7.5 统一内存架构（UMA）影响评估——共识参数零改动
 
@@ -256,6 +256,37 @@ weight = 3 × base_size + total_size
 2. **链上只放哈希**：原始文件永不进链——公开不可篡改账本 ≠ 存储位置。隐私、内容合规全部在链下解决（本地库/IPFS/联盟链），PTC 保持内容中立，不承担监管面。
 
 **战略注脚**：存证/锚定是付费、UTXO 中性、与代币投机无关的**可持续费用需求**——在区块奖励趋零的远期，这类需求是安全预算的健康来源。基座不为应用层做特殊设计，但应用层会反哺链的安全。**机器公证是锚定的旗舰需求**（§1.5）：模型卡、推理承诺、训练数据指纹、agent 行为日志——双锚定的完整叙事是**机器文明定期向人类文明递交公证**。
+
+---
+
+### 4.7 Mempool 政策（2026-08-29 决议：参考客户端默认政策包）
+
+**定性**：mempool 政策不是共识——P0 冻结的是**参考客户端默认政策包**，节点可自行调整，未来演化无需分叉。但政策包是 L2 通道安全与 agent 费用管理的地基，故随 P0 一并冻结默认值。
+
+**默认政策包 v1**：
+
+| 项 | 决定 | 说明 |
+|---|---|---|
+| RBF | **BIP-125 opt-in**（`sequence < 0xfffffffe` 信号） | 替换规则照抄 BIP-125：绝对费用 ≥ 被替交易总费用 + 增量中继费；full-RBF 允许作为节点政策变体，默认关闭 |
+| CPFP | **创世支持** | 祖先包费率（ancestor package feerate）作为区块模板构建规则 |
+| Package relay | **创世支持** | 包提交（package submission）+ 包内 RBF（package RBF）随参考客户端落地 |
+| TRUC（v3） | **创世启用** | 承诺交易推荐封装为 v3（单亲单子），抗 pinning |
+| 锚输出 | **ephemeral anchors** | 0 值、anyone-can-spend、仅在带费包内有效——通道 commit tx 的标准加费路径；比尘埃锚干净（不产生 UTXO 垃圾） |
+| 包/袋限制 | 祖先/后代 ≤25 笔、≤101 kvB；mempool 默认 300 MB；增量中继费 1 sat/vB（初始值） | 对齐 Bitcoin Core 2026 默认；政策常量可调 |
+
+**为什么是这套**：全部为 Bitcoin 实战检验过的组合。Bitcoin 为 LN 把 package relay / TRUC / ephemeral anchors 这份作业补了十年（2023–24 年才齐），PTC 创世直接携带终态——无历史包袱红利的又一次兑现，且零新语义发明（BIP-125 语义逐字照抄，工具链可移植）。
+
+**与 agent 的关系**：RBF/CPFP 三件套是 agent 费用管理的原语——卡死交易的 unstick、承诺交易加费、预算内的费率选择，全部建立在它之上。headless SDK 的费率估计与加费 API 以本节为前提（P1 交付要求）。
+
+### 4.8 L2 readiness（2026-08-29 新增）
+
+**通道型 L2：绿。** 所需原语全齐：SegWit 语义（txid 对 witness 不可变）+ Taproot/MuSig2（通道资金 = 链上一把普通 Schnorr 签名，小且私密）+ CLTV/CSV（penalty 与超时路径，决议 #3 白名单内）+ Schnorr adaptor → **PTLC-native**（点时间锁，多跳隐私优于 LN 的 HTLC，且无迁移债）+ 锚/TRUC/package relay（§4.7）解决 force-close 加费。通道工厂与 splice 按 2026 终态协议设计，不给 2015 年格式留兼容。watchtower 本身就是 agent——机器守夜人替机器通道盯违约，与机器公证处（§1.5/§4.6）对称。
+
+**rollup 型 L2：红，by design。** canonical rollup 要求 L1 执行 fraud/validity proof，而 tapscript 白名单没有执行平台（决议 #3：不做智能合约）。这与"不做合约赌场"是同一条线。sovereign-rollup 弱形态（L1 仅作排序/数据可用性锚）可由 OP_RETURN 聚合承载——但那是数据锚，不是 rollup，不混淆概念。
+
+**eltoo：延后。** 需 SIGHASH_ANYPREVOUT，不在 v1 白名单（APO 引入签名可塑性面，Bitcoin 自身也未激活）。通道走 LN 式 penalty + PTLC。APO 列为远期 tapscript 扩展候选，走 BIP 式流程，不设时间表。
+
+**微支付：通道的事，不是 L1 的事。** per-call 级计费活在通道/L2；L1 做结算与公证。诚实边界：若 headless SDK 不把通道操作做成一等公民，"agent 用 PTC"在微支付场景就是空话——此责任已写进 P1 交付物（headless SDK，agent-first）。
 
 ---
 
@@ -632,6 +663,7 @@ Apple Silicon（M 系列）、AMD Strix Halo、Snapdragon X 等 SoC 让 CPU/GPU 
 | 5 | ECDSA 保留与否 | **两者都收**：Schnorr 为默认签名方式，ECDSA 保持兼容 |
 | 6 | 命名修订（2026-08-29）| 链名与 ticker 由 **GTC**（GPU Chain）更名為 **PTC**（Parallel Bit Chain），对齐"与 Bitcoin 并行同构"的定位；HRP `gtc`→`ptc`、genesis-seed 前缀 `GTC/`→`PTC/` 同步更换（P0 冻结前执行，零迁移成本）；PoW 算法名 **Geyser** 不变 |
 | 7 | AI-native 重定位（2026-08-29）| **人类用 BTC，AI 用 PTC**：需求侧定位、零共识改动；三承诺 = headless 工具链 / 硬通货可预算性 / 机器公证处（双锚定）；不做智能合约赌场、不做 AI 表演（详见 §1.5） |
+| 8 | Mempool 政策（2026-08-29）| 参考客户端默认包：**BIP-125 opt-in RBF + CPFP（祖先包费率）+ package relay + TRUC(v3) + ephemeral anchors**；袋子限制对齐 Core 2026 默认。政策层而非共识（可调、无需分叉）；通道型 L2 创世就绪、rollup 明确不做、eltoo/APO 延后（§4.7–4.8） |
 
 至此设计层面无未决问题，进入 **P0 规范冻结**（跨平台测试向量集是唯一验收门槛）。
 
@@ -681,4 +713,4 @@ KDF (cache)         = Argon2id 风格顺序混合
 
 ---
 
-*v0.3.8：§1.5 补命名词源学与书写规则（Coin⇅Chain / b⇅p 双重翻转 = pitchain.dev；正式名保持 Parallel Bit Chain，“Bit Chain” 恒拆两词，连写形态仅存于 wordmark hover）。v0.3.7：AI-native 重定位 —— 人类用 BTC，AI 用 PTC：新增 §1.5（需求侧定位、零共识改动、三承诺与三不做）；P1 交付物 +headless 钱包 SDK；§4.6 战略注脚补机器公证叙事；决议记录 +§12-7。v0.3.6：项目更名 —— 链名与 ticker 由 GTC（GPU Chain）改为 PTC（Parallel Bit Chain）；HRP `gtc`→`ptc`，genesis-seed 前缀 `GTC/`→`PTC/`；白皮书文件更名為 ptc-whitepaper-{en,zh}.md；决议记录 +§12-6。于 P0 规范冻结前执行，无测试向量与代码迁移成本。v0.3.5：新增 §7.7 抗量子评估（PoW 结构性抵抗/QRAM 论证、签名暴露分类、输出类型阶梯 v0/v1/v2、里程碑触发与混合迁移）、风险表 +R12、§4.5 输出类型阶梯。v0.3.4：白皮书双语草案 v0.9 就绪（docs/whitepaper/，英文为 canonical），v1.0 于 P0 出口发布。v0.3.3：新增 §7.6 AI 数据中心与租用算力威胁评估（挖矿 5–9x 劣势、短租攻击算例、闲置机队情景）、R4/R8 更新。v0.3.2：新增 §4.6 数据载体与存证（OP_RETURN 80B 政策、锚定架构、双锚定公信力边界）、风险表 +R11。v0.3.1：新增 §4.3 区块大小与吞吐。v0.3：v0.2 基础上新增 §7.5 UMA 影响评估（共识参数零改动）、§7.1 UMA 平台数据、§6.3 双中位曲线容量政策、五方测试平台与 Metal 后端路线。数值参数在 P0 规范冻结（测试向量发布）前仍可微调，结构决策（三层防御、VRAM 政策、版本轮换）为长期承诺。*
+*v0.3.9：新增 §4.7 Mempool 政策（默认政策包：opt-in RBF / CPFP / package relay / TRUC + ephemeral anchors）与 §4.8 L2 readiness（通道绿 / rollup 红 / eltoo 延后 / 微支付归通道）；决议 +§12-8；新增 docs/COMPARISON.md 工程对比（PTC×BTC 五层）。v0.3.8：§1.5 补命名词源学与书写规则（Coin⇅Chain / b⇅p 双重翻转 = pitchain.dev；正式名保持 Parallel Bit Chain，“Bit Chain” 恒拆两词，连写形态仅存于 wordmark hover）。v0.3.7：AI-native 重定位 —— 人类用 BTC，AI 用 PTC：新增 §1.5（需求侧定位、零共识改动、三承诺与三不做）；P1 交付物 +headless 钱包 SDK；§4.6 战略注脚补机器公证叙事；决议记录 +§12-7。v0.3.6：项目更名 —— 链名与 ticker 由 GTC（GPU Chain）改为 PTC（Parallel Bit Chain）；HRP `gtc`→`ptc`，genesis-seed 前缀 `GTC/`→`PTC/`；白皮书文件更名為 ptc-whitepaper-{en,zh}.md；决议记录 +§12-6。于 P0 规范冻结前执行，无测试向量与代码迁移成本。v0.3.5：新增 §7.7 抗量子评估（PoW 结构性抵抗/QRAM 论证、签名暴露分类、输出类型阶梯 v0/v1/v2、里程碑触发与混合迁移）、风险表 +R12、§4.5 输出类型阶梯。v0.3.4：白皮书双语草案 v0.9 就绪（docs/whitepaper/，英文为 canonical），v1.0 于 P0 出口发布。v0.3.3：新增 §7.6 AI 数据中心与租用算力威胁评估（挖矿 5–9x 劣势、短租攻击算例、闲置机队情景）、R4/R8 更新。v0.3.2：新增 §4.6 数据载体与存证（OP_RETURN 80B 政策、锚定架构、双锚定公信力边界）、风险表 +R11。v0.3.1：新增 §4.3 区块大小与吞吐。v0.3：v0.2 基础上新增 §7.5 UMA 影响评估（共识参数零改动）、§7.1 UMA 平台数据、§6.3 双中位曲线容量政策、五方测试平台与 Metal 后端路线。数值参数在 P0 规范冻结（测试向量发布）前仍可微调，结构决策（三层防御、VRAM 政策、版本轮换）为长期承诺。*

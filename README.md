@@ -27,6 +27,7 @@ BTC 是人类的链，PTC 是机器的链 —— `b` 翻过来是 `p`，镜像�
 | 出块 / 供给 | 600 秒；50 PTC 起步，210,000 块减半，总量 21,000,000 |
 | 区块大小 | 4,000,000 WU（SegWit 重量制），典型 1.5–2 MB，不扩 |
 | 交易 / 脚本 | UTXO + Taproot；Schnorr 默认、ECDSA 兼容；tapscript 白名单（含 CLTV/CSV 时间锁，多签走 MuSig2） |
+| Mempool | opt-in RBF（BIP-125）· CPFP · package relay · TRUC + ephemeral anchors —— 参考客户端默认政策，通道型 L2 创世就绪（DESIGN §4.7–4.8） |
 | 地址 | Bech32m，HRP `ptc` |
 | PoW | **Geyser**（见下），区块头 128 B（+`algo_version` +`mix_digest`） |
 | 启动 | 零预挖 / 零 dev tax；公开测试网 ≥6 个月；Stratum v2 |
@@ -42,7 +43,7 @@ BTC 是人类的链，PTC 是机器的链 —— `b` 翻过来是 `p`，镜像�
 ## 几个立场鲜明的取舍
 
 - **UMA（Apple Silicon 等）**：共识零改动，Mac 是合法矿机（M4 Max ≈ 0.8×RTX 5070，每 hash 电耗更低）；Metal 后端进 P2 路线
-- **区块不扩**：一边用 Geyser 保矿工分布、一边用大区块毁节点分布是左手打右手；要吞吐走 L2
+- **区块不扩**：一边用 Geyser 保矿工分布、一边用大区块毁节点分布是左手打右手；要吞吐走 L2——通道型 L2 创世就绪（PTLC-native + 锚 + package relay，DESIGN §4.8），rollup 明确不做
 - **存证 / 机器公证**：共识中立，OP_RETURN 80 B 政策收编（兼容 OpenTimestamps）；模型卡 / 推理承诺 / 行为日志日常锚 PTC、终局双锚 BTC，链上只放哈希 —— 机器文明定期向人类文明递交公证
 - **抗量子**：PoW 结构性抵抗（QRAM 论证）；签名走输出类型阶梯 v0 哈希承诺 / v1 Taproot / v2 预留 PQC（ML-DSA），里程碑触发启用——创世不放安全表演
 - **诚实清单**：GPU 农场无法用算法排除、新链启动期最脆弱、绝对 ASIC 免疫不存在 —— 全部写在文档 §7.4 / §11，不装看不见
@@ -50,7 +51,8 @@ BTC 是人类的链，PTC 是机器的链 —— `b` 翻过来是 `p`，镜像�
 ## 文档与路线图
 
 - 白皮书（草案 v0.9，双语）：**[English](docs/whitepaper/ptc-whitepaper-en.md)**（canonical）· **[中文](docs/whitepaper/ptc-whitepaper-zh.md)** —— 纯技术向；v1.0 于 P0 测试向量冻结时发布
-- 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.8）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
+- 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.9）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
+- 工程对比：**[docs/COMPARISON.md](docs/COMPARISON.md)** —— PTC × Bitcoin 五层对比（相同语义 / 结构差异 / mempool 与 L2 / 无疤红利 / 护城河诚实账）
 - P0 测试向量框架：**[p0/](p0/)** —— 向量格式 / 五方平台契约 / 位级验收与冻结流程已定义（骨架）；参考实现与 runner 待实现
 
 | 阶段 | 内容 |
