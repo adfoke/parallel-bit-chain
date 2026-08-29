@@ -1,4 +1,4 @@
-# PTC (Parallel Bit Chain): A GPU-Native, Bitcoin-Isomorphic Proof-of-Work Blockchain
+# PTC (Parallel Bit Chain): A GPU-Native, Bitcoin-Isomorphic Proof-of-Work Blockchain for the Machine Economy
 
 **Whitepaper Draft v0.9 · August 2026**
 
@@ -11,6 +11,8 @@
 ## Abstract
 
 PTC is a Nakamoto-consensus proof-of-work blockchain that reproduces Bitcoin's ledger semantics — UTXO model, 600-second blocks, 21,000,000-unit supply with 210,000-block halvings, 2016-block difficulty retargeting — and replaces only the proof-of-work function.
+
+Positioning: **humans transact on Bitcoin; autonomous agents settle on PTC.** The AI-native framing is demand-side only — zero consensus changes — and commits the reference stack to three things: headless-first tooling (agents have no screens; every interface is an API before it is a GUI), hard-money predictability over programmability (agents need settlement they can budget against, not a smart-contract casino), and a machine notary (§7: model cards, inference commitments, and agent logs anchor routinely on PTC, terminally on Bitcoin).
 
 The algorithm, **Geyser**, is engineered so that the economically rational mining device is a commodity consumer GPU. Each hash performs 64 rounds of 128-byte random accesses into a 6 GiB epoch dataset (8 KiB per hash), binding throughput to memory bandwidth; and executes a 256-instruction program of mixed integer and IEEE-754 floating-point operations regenerated from the previous block hash, binding efficiency to general-purpose execution units.
 
@@ -41,6 +43,14 @@ Geyser does not *prevent* ASICs. It makes them a bad investment:
 ### 1.3 Honest scope
 
 This paper quantifies, rather than hides, the limits of the approach: GPU farms cannot be excluded by algorithm design; commodity hardware's resale value lowers 51%-attack cost to depreciation-plus-electricity; and in the network's early days its total hash rate is smaller than a rentable cloud fleet (§6.3, §10).
+
+---
+
+### 1.4 The mirror: humans on Bitcoin, agents on PTC
+
+A lowercase `b` flipped is a `p`. Bitcoin is humanity's chain; PTC is its mirror for the machine economy. Autonomous agents are natively keypairs — no passport, no bank account, 24/7 operation, APIs for senses — while the "AI chains" of 2026 are overwhelmingly smart-contract casinos. Agents already own Turing-complete runtimes: themselves. What they lack is settlement they can budget against, and a notary for their records.
+
+The AI-native positioning is **demand-side only**: zero consensus changes, no new script capability, no "AI governance" token, no claim that a chain can verify intelligence — a chain verifies hashes and signatures, not intent. It commits the reference stack to: (i) **headless-first tooling** — wallets, node APIs, and mining protocols are APIs before they are GUIs; (ii) **Bitcoin's hard-money discipline, kept deliberately** — a predictable fee market and emission schedule are features for agent cost functions, not nostalgia; (iii) **a machine notary** (§7) — model cards, inference commitments, training-data fingerprints, and agent logs anchor routinely on PTC and terminally on Bitcoin: the machine economy periodically notarizes itself into humanity's ledger. AI as *hashpower supplier* is a separate, adversarial question (§6.1); the two do not offset.
 
 ---
 
@@ -282,6 +292,7 @@ PTC is content-neutral at consensus. Chain-embedded data cannot meaningfully be 
 - **Aggregation pattern**: N evidence hashes → Merkle tree → root on-chain. A saturated block carries 0.6–0.9M bare anchors/day; with aggregation the limit is fees, not capacity.
 - **Credibility boundary, stated honestly**: evidentiary weight tracks the anchoring chain's own credibility; a new chain is weaker than Bitcoin. The recommended pattern is **dual anchoring** — high-frequency anchoring on PTC (cheap), periodic terminal anchoring on Bitcoin — at zero additional design cost via OTS compatibility.
 - Raw files never go on-chain; privacy and content compliance stay off-chain. PTC carries hashes, not content, and assumes no regulatory surface.
+- **Machine notary (flagship demand, §1.4)**: model cards, inference commitments, training-data fingerprints, and agent action logs — hashes only, routinely anchored on PTC, terminally on Bitcoin.
 
 Anchoring is fee-paying, UTXO-neutral, and independent of token speculation — a sustainable fee source for the long-term security budget as subsidy decays.
 
@@ -302,7 +313,7 @@ Anchoring is fee-paying, UTXO-neutral, and independent of token speculation — 
 
 ## 9. Token Economics
 
-Deliberately Bitcoin-identical: 50 PTC genesis subsidy, halving every 210,000 blocks, terminal supply 21,000,000 PTC, 100-block coinbase maturity. 144 blocks/day → 7,200 PTC/day first-year emission. Simplicity is the feature: no new emission schedule to argue about, one security-budget curve, one fee market. Long-term security is carried by fee demand (transaction fees + anchoring demand, §7) against declining subsidy — the same equilibrium Bitcoin faces, faced honestly rather than re-engineered.
+Deliberately Bitcoin-identical: 50 PTC genesis subsidy, halving every 210,000 blocks, terminal supply 21,000,000 PTC, 100-block coinbase maturity. 144 blocks/day → 7,200 PTC/day first-year emission. Simplicity is the feature: no new emission schedule to argue about, one security-budget curve, one fee market. Long-term security is carried by fee demand (transaction fees + anchoring and machine-notary demand, §7) against declining subsidy — the same equilibrium Bitcoin faces, faced honestly rather than re-engineered.
 
 ---
 
@@ -329,7 +340,7 @@ Deliberately Bitcoin-identical: 50 PTC genesis subsidy, halving every 210,000 bl
 | Phase | Deliverable | Exit criterion |
 |---|---|---|
 | **P0** | spec freeze; five-platform test vectors (NVIDIA / AMD / Intel / Apple GPU / ARM64 CPU; ≥10⁶ samples each); whitepaper v1.0 | bit-exact agreement across all five |
-| **P1** | Go full node (UTXO, consensus, p2p); CUDA + ROCm miners; Stratum v2 | public testnet running continuously |
+| **P1** | Go full node (UTXO, consensus, p2p); CUDA + ROCm miners; Stratum v2; headless wallet SDK (agent-first) | public testnet running continuously |
 | **P2** | incentivized testnet (valueless coins); Metal backend; consensus + cryptography audits; attack exercises | ≥ 6 months stable + two audits passed |
 | **P3** | mainnet genesis with signed checkpoints | — |
 
@@ -352,5 +363,7 @@ Reference client in Go (btcd/secp256k1 lineage for portability); miners open-sou
 ---
 
 *Geyser = Ethash's memory core + KawPow's program layer + Monero's rotation contract + an explicit VRAM growth policy. The chain around it is Bitcoin's, deliberately unchanged.*
+
+*The mirror: humans on Bitcoin, agents on PTC.*
 
 *— Draft v0.9. Comments to the technical review list. Numeric parameters freeze at P0 exit.*
