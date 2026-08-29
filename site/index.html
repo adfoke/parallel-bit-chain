@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PTC — Parallel Bit Chain</title>
+<meta name="description" content="A GPU-native, Bitcoin-isomorphic proof-of-work chain. Same ledger as Bitcoin, flipped proof of work. Design stage — P0 spec freeze in progress.">
+<meta name="theme-color" content="#0b0d12">
+<meta property="og:title" content="PTC — Parallel Bit Chain">
+<meta property="og:description" content="BTC, flipped. Same ledger, opposite proof of work — a GPU-native PoW chain.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{
+  --bg:#0b0d12;
+  --bg-alt:#0d1017;
+  --card:#10141c;
+  --border:#1e2430;
+  --border-hi:#2a3242;
+  --fg:#e8eaf0;
+  --muted:#98a2b3;
+  --accent:#f7931a;
+  --accent-soft:rgba(247,147,26,.12);
+  --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(247,147,26,.35)}
+a{color:inherit}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px;position:relative}
+
+/* ---------- nav ---------- */
+header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:28px;height:60px}
+.brand{font-family:var(--mono);font-size:19px;font-weight:700;text-decoration:none;letter-spacing:.02em;display:flex;align-items:baseline}
+.nav-links{display:flex;gap:22px;margin-right:auto}
+.nav-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--fg)}
+.nav-actions{display:flex;gap:12px;align-items:center;margin-left:auto}
+.lang-btn{font-family:var(--mono);font-size:12px;color:var(--fg);background:transparent;border:1px solid var(--border-hi);border-radius:8px;padding:6px 12px;cursor:pointer;transition:border-color .2s}
+.lang-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- the flipped letter ---------- */
+.flip-b{display:inline-block;transform:scaleY(-1);color:var(--accent);transition:transform .3s}
+.brand:hover .flip-b{transform:scaleY(1)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;padding:12px 22px;transition:filter .2s,border-color .2s,transform .15s}
+.btn-primary{background:var(--accent);color:#1a1205}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-ghost{border:1px solid var(--border-hi);color:var(--fg)}
+.btn-ghost:hover{border-color:var(--accent)}
+.btn-sm{font-size:13px;padding:7px 14px}
+
+/* ---------- hero ---------- */
+.hero{padding:96px 0 72px;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(232,234,240,.05) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 90%);mask-image:linear-gradient(180deg,#000 0%,transparent 90%);pointer-events:none}
+.hero::after{content:"";position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:640px;height:480px;background:radial-gradient(closest-side,rgba(247,147,26,.09),transparent);pointer-events:none}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--accent);margin:0 0 28px}
+.hero-mark{font-family:var(--mono);font-weight:700;font-size:clamp(4.5rem,14vw,8rem);line-height:1;letter-spacing:-.02em;margin:0 auto;max-width:100%}
+@keyframes bflip{0%,35%{transform:scaleY(1);color:var(--fg)}70%{transform:scaleY(-1)}85%{transform:scaleY(-.82)}100%{transform:scaleY(-1);color:var(--accent)}}
+.hero-mark .flip-b{transform:scaleY(-1);animation:bflip 1.6s .4s both}
+.hero-mark:hover .flip-b{animation:none;transform:scaleY(1)}
+.mirror-line{display:flex;align-items:center;justify-content:center;gap:14px;width:min(440px,82%);margin:26px auto 0}
+.ml-seg{flex:1;border-top:1px dashed var(--border-hi)}
+.ml-badge{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.hero-head{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:700;letter-spacing:-.01em;margin:34px 0 0}
+.hero-sub{color:var(--muted);max-width:640px;margin:20px auto 0;font-size:16.5px}
+.hero-cta{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+.status-pill{display:inline-flex;align-items:center;gap:10px;margin-top:30px;font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:7px 16px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(247,147,26,.5);animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(247,147,26,0)}100%{box-shadow:0 0 0 0 rgba(247,147,26,0)}}
+.seed-line{margin-top:34px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.seed-line span{display:block;font-size:10px;letter-spacing:.2em;color:var(--accent);margin-bottom:6px;opacity:.85}
+.seed-line code{color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 10px;display:inline-block}
+
+/* ---------- stats ---------- */
+.stats{border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:30px 24px}
+.stat{text-align:center}
+.stat-v{font-family:var(--mono);font-size:clamp(1.4rem,2.6vw,1.8rem);font-weight:700;margin:0}
+.stat-l{font-size:13px;color:var(--muted);margin:6px 0 0}
+
+/* ---------- sections ---------- */
+.sec{padding:92px 0}
+.sec-alt{background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.sec h2{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.01em;line-height:1.2;margin:0 0 16px}
+.lead{color:var(--muted);max-width:640px;margin:0 0 48px;font-size:16.5px}
+.sec-head{margin-bottom:48px}
+
+/* ---------- mirror grid ---------- */
+.mirror-grid{display:grid;grid-template-columns:1fr 1fr;position:relative;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--card)}
+.m-col{padding:34px}
+.m-flip{border-left:1px dashed var(--border-hi)}
+.m-col h3{font-size:15px;font-weight:700;margin:0 0 18px;font-family:var(--mono);letter-spacing:.04em}
+.m-same h3{color:var(--muted)}
+.m-flip h3{color:var(--accent)}
+.m-col ul{list-style:none;margin:0;padding:0}
+.m-col li{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--border);font-size:15px;align-items:baseline}
+.m-col li:first-child{border-top:none}
+.mi{font-family:var(--mono);font-size:13px;color:var(--muted);flex:0 0 auto}
+.mi-x{color:var(--accent)}
+.m-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--bg);border:1px solid var(--border-hi);border-radius:999px;padding:6px 14px;z-index:2}
+
+/* ---------- geyser ---------- */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;transition:border-color .25s,transform .25s}
+.card:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+.card-no{font-family:var(--mono);color:var(--accent);font-size:13px;margin:0 0 12px;letter-spacing:.1em}
+.card h3{font-size:17px;font-weight:700;margin:0 0 10px}
+.card p{color:var(--muted);font-size:14.5px;margin:0}
+.target-strip{margin-top:22px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:16px 20px;font-family:var(--mono);font-size:13px;color:var(--muted);background:var(--card);line-height:1.7}
+
+/* ---------- honesty ---------- */
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+/* ---------- roadmap ---------- */
+.phases{list-style:none;margin:0;padding:0}
+.phase{display:grid;grid-template-columns:120px 1fr;gap:28px;padding:28px 0}
+.phase + .phase{border-top:1px solid var(--border)}
+.ph-tag{display:flex;align-items:flex-start;gap:10px}
+.ph-no{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent)}
+.now-badge{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:3px 9px;margin-top:6px}
+.phase h3{font-size:17px;font-weight:700;margin:0 0 6px}
+.phase p{color:var(--muted);font-size:15px;margin:0;max-width:620px}
+
+/* ---------- footer ---------- */
+.footer{border-top:1px solid var(--border);padding:72px 0 56px;text-align:center}
+.f-tag{font-family:var(--mono);font-size:15px;color:var(--accent);letter-spacing:.06em;margin:0 0 28px}
+.f-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.f-links a{font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:8px;padding:7px 14px;transition:border-color .2s,color .2s}
+.f-links a:hover{border-color:var(--accent);color:var(--accent)}
+.f-disc{font-size:12.5px;color:var(--muted);max-width:560px;margin:0 auto 18px;opacity:.85}
+.f-copy{font-size:12px;color:var(--muted);margin:0;opacity:.7}
+.f-copy .flip-b{color:var(--accent);font-family:var(--mono)}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .nav-links{display:none}
+  .cards3{grid-template-columns:1fr}
+  .cards2{grid-template-columns:1fr}
+  .mirror-grid{grid-template-columns:1fr}
+  .m-flip{border-left:none;border-top:1px dashed var(--border-hi)}
+  .m-badge{display:none}
+  .phase{grid-template-columns:1fr;gap:8px;padding:24px 0}
+  .ph-tag{align-items:center}
+}
+@media (max-width:560px){
+  .stats-grid{grid-template-columns:1fr 1fr;gap:20px 8px}
+  .hero{padding:64px 0 56px}
+  .sec{padding:64px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero-mark .flip-b{animation:none}
+  .dot{animation:none}
+  .card{transition:none}
+}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <nav class="wrap nav">
+    <a class="brand" href="#top" aria-label="PTC — Parallel Bit Chain"><span class="flip-b">b</span>tc</a>
+    <div class="nav-links">
+      <a href="#mirror" data-i18n="nav_mirror">Mirror</a>
+      <a href="#geyser" data-i18n="nav_geyser">Geyser</a>
+      <a href="#honesty" data-i18n="nav_honesty">Honesty</a>
+      <a href="#roadmap" data-i18n="nav_roadmap">Roadmap</a>
+    </div>
+    <div class="nav-actions">
+      <button id="langBtn" class="lang-btn" type="button">中文</button>
+      <a class="btn btn-ghost btn-sm" href="https://github.com/adfoke/parallel-bit-chain" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="hero_eyebrow">PARALLEL BIT CHAIN · GPU-NATIVE PROOF OF WORK</p>
+      <h1 class="hero-mark" aria-label="PTC — Parallel Bit Chain" title="b ⇅ p"><span class="flip-b">b</span>tc</h1>
+      <div class="mirror-line" aria-hidden="true"><span class="ml-seg"></span><span class="ml-badge">b ⇅ p</span><span class="ml-seg"></span></div>
+      <h2 class="hero-head" data-i18n="hero_head">BTC, flipped — same ledger, opposite proof of work.</h2>
+      <p class="hero-sub" data-i18n="hero_sub">A GPU-native PoW chain that keeps Bitcoin's ledger semantics exactly — UTXO, 10-minute blocks, 21 million coins, four-year halvings — and replaces only the proof of work. Not “banning ASICs” (impossible), but making an ASIC a worse deal than a graphics card.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/whitepaper/ptc-whitepaper-en.md" target="_blank" rel="noopener" data-i18n="hero_cta_wp">Read the whitepaper</a>
+        <a class="btn btn-ghost" href="https://github.com/adfoke/parallel-bit-chain" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <p class="status-pill"><span class="dot"></span><span data-i18n="hero_status">design stage · P0 spec freeze in progress · no code yet, no coin yet</span></p>
+      <p class="seed-line"><span data-i18n="hero_seed_label">GENESIS COMMITMENT</span><code>epoch_seed(0) = keccak256("PTC/mainnet/genesis-seed-v1")</code></p>
+    </div>
+  </section>
+
+  <!-- ================= STATS ================= -->
+  <section class="stats">
+    <div class="wrap stats-grid">
+      <div class="stat"><p class="stat-v">600 s</p><p class="stat-l" data-i18n="stat1_l">block interval</p></div>
+      <div class="stat"><p class="stat-v">21,000,000</p><p class="stat-l" data-i18n="stat2_l">total supply</p></div>
+      <div class="stat"><p class="stat-v">210,000</p><p class="stat-l" data-i18n="stat3_l">blocks per halving</p></div>
+      <div class="stat"><p class="stat-v">128 B</p><p class="stat-l" data-i18n="stat4_l">block header</p></div>
+    </div>
+  </section>
+
+  <!-- ================= MIRROR ================= -->
+  <section id="mirror" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="mir_eyebrow">01 · THE MIRROR</p>
+        <h2 data-i18n="mir_h2">One axis identical. One axis inverted.</h2>
+        <p class="lead" data-i18n="mir_lead">Flip a lowercase b and you get a p. PTC keeps Bitcoin's ledger untouched and flips its proof of work — that is the whole project.</p>
+      </div>
+      <div class="mirror-grid">
+        <div class="m-badge" aria-hidden="true">b ⇅ p</div>
+        <div class="m-col m-same">
+          <h3 data-i18n="mir_same_h">IDENTICAL TO BITCOIN</h3>
+          <ul>
+            <li><span class="mi">=</span><span data-i18n="mir_same_1">UTXO transaction model</span></li>
+            <li><span class="mi">=</span><span data-i18n="mir_same_2">600-second blocks</span></li>
+            <li><span class="mi">=</span><span data-i18n="mir_same_3">21,000,000 PTC, halving every 210,000 blocks</span></li>
+            <li><span class="mi">=</span><span data-i18n="mir_same_4">Bitcoin difficulty formula — 2016-block window, ±4× clamp</span></li>
+            <li><span class="mi">=</span><span data-i18n="mir_same_5">Bech32m addresses, HRP ptc</span></li>
+            <li><span class="mi">=</span><span data-i18n="mir_same_6">Taproot: Schnorr default, ECDSA compatible</span></li>
+            <li><span class="mi">=</span><span data-i18n="mir_same_7">MuSig2 multisig, CLTV/CSV timelocks</span></li>
+          </ul>
+        </div>
+        <div class="m-col m-flip">
+          <h3 data-i18n="mir_flip_h">FLIPPED</h3>
+          <ul>
+            <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_1">Geyser PoW — memory-bandwidth-bound hashing</span></li>
+            <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_2">Per-block random programs — 256 mixed INT/FP instructions</span></li>
+            <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_3">Scheduled algorithm rotation via algo_version</span></li>
+            <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_4">128-byte header with algo_version + mix_digest</span></li>
+            <li><span class="mi mi-x">⇅</span><span data-i18n="mir_flip_5">Mining economics: buy a GPU, don't tape out an ASIC</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GEYSER ================= -->
+  <section id="geyser" class="sec sec-alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="gey_eyebrow">02 · GEYSER · PROOF OF WORK</p>
+        <h2 data-i18n="gey_h2">Three layers between ASICs and your GPU</h2>
+      </div>
+      <div class="cards3">
+        <article class="card">
+          <p class="card-no">01</p>
+          <h3 data-i18n="gey_c1_h">Bandwidth binding</h3>
+          <p data-i18n="gey_c1_b">Every hash streams random 8 KiB reads across a 6 GiB dataset. The bottleneck is memory bandwidth — and consumer GPUs are the platform-wide optimum of hashrate per dollar per GB/s. CPUs, FPGAs and AI accelerators are structurally priced out.</p>
+        </article>
+        <article class="card">
+          <p class="card-no">02</p>
+          <h3 data-i18n="gey_c2_h">Random program layer</h3>
+          <p data-i18n="gey_c2_b">Each block's PoW program is generated from the previous block hash: 256 mixed integer/float instructions, reshuffled every block. An ASIC that wants to keep up has to build itself into a GPU.</p>
+        </article>
+        <article class="card">
+          <p class="card-no">03</p>
+          <h3 data-i18n="gey_c3_h">Rotation covenant</h3>
+          <p data-i18n="gey_c3_b">algo_version hard-forks the algorithm on a published 2–3 year schedule. GPU miners update software; ASIC tape-outs turn into landfill.</p>
+        </article>
+      </div>
+      <div class="target-strip"><span data-i18n="gey_target">Target: ASIC efficiency capped at ≤2× with no payback · dataset ≤60% of median-GPU VRAM (6 GiB today, +32 MiB per epoch)</span></div>
+    </div>
+  </section>
+
+  <!-- ================= HONESTY ================= -->
+  <section id="honesty" class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="hon_eyebrow">03 · HONEST ENGINEERING</p>
+        <h2 data-i18n="hon_h2">What we don't claim</h2>
+        <p class="lead" data-i18n="hon_lead">A chain that hides its trade-offs is marketing, not engineering. The ugly parts are written down, with numbers, in the docs.</p>
+      </div>
+      <div class="cards2">
+        <article class="card">
+          <h3 data-i18n="hon_1_h">No absolute ASIC immunity</h3>
+          <p data-i18n="hon_1_b">It does not exist, and anyone promising it is selling something. The goal is economic: hold ASIC efficiency at ≤2× and destroy the payback period.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="hon_2_h">Birth is fragile — said out loud</h3>
+          <p data-i18n="hon_2_b">New chains are weakest at launch. That is why mainnet ships only after six-plus months of public testnet, with signed checkpoints against early private chains.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="hon_3_h">Zero premine, zero dev tax</h3>
+          <p data-i18n="hon_3_b">No allocation to founders. Emission starts at genesis on Bitcoin's exact schedule — one curve, nothing to argue about.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="hon_4_h">Macs are legitimate miners</h3>
+          <p data-i18n="hon_4_b">Apple-silicon UMA needs zero consensus changes: M4 Max ≈ 0.8× an RTX 5070 at lower energy per hash. A Metal backend lands in P2.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="hon_5_h">Blocks stay small</h3>
+          <p data-i18n="hon_5_b">4M weight units with no growth policy. Throughput belongs on L2; the chain itself carries hashes, not files.</p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="hon_6_h">No quantum theater</h3>
+          <p data-i18n="hon_6_b">No PQC at genesis — no CRQC exists. The extension points are reserved now and triggered by capability milestones, not by marketing.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ROADMAP ================= -->
+  <section id="roadmap" class="sec sec-alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="rmp_eyebrow">04 · ROADMAP</p>
+        <h2 data-i18n="rmp_h2">Four phases, no shortcuts</h2>
+      </div>
+      <ol class="phases">
+        <li class="phase">
+          <div class="ph-tag"><span class="ph-no">P0</span><span class="now-badge" data-i18n="rmp_now">NOW</span></div>
+          <div><h3 data-i18n="rmp_p0_h">Spec freeze</h3><p data-i18n="rmp_p0_b">Cross-platform test vectors, bit-identical on five platforms — NVIDIA, AMD, Intel, Apple GPU, ARM64 CPU. The whitepaper graduates to v1.0.</p></div>
+        </li>
+        <li class="phase">
+          <div class="ph-tag"><span class="ph-no">P1</span></div>
+          <div><h3 data-i18n="rmp_p1_h">Full node &amp; miners</h3><p data-i18n="rmp_p1_b">Go full node, CUDA and ROCm miners, Stratum v2.</p></div>
+        </li>
+        <li class="phase">
+          <div class="ph-tag"><span class="ph-no">P2</span></div>
+          <div><h3 data-i18n="rmp_p2_h">Incentivized testnet</h3><p data-i18n="rmp_p2_b">Six-plus months of public testnet, Metal backend for Apple GPUs, dual external audits.</p></div>
+        </li>
+        <li class="phase">
+          <div class="ph-tag"><span class="ph-no">P3</span></div>
+          <div><h3 data-i18n="rmp_p3_h">Mainnet</h3><p data-i18n="rmp_p3_b">Genesis with signed checkpoints against early private chains. Zero premine, zero dev tax.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="wrap">
+    <p class="f-tag" data-i18n="ft_tag">No premine. No dev tax. No presale. No exceptions.</p>
+    <nav class="f-links">
+      <a href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/whitepaper/ptc-whitepaper-en.md" target="_blank" rel="noopener" data-i18n="ft_wp_en">Whitepaper · EN (canonical)</a>
+      <a href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/whitepaper/ptc-whitepaper-zh.md" target="_blank" rel="noopener" data-i18n="ft_wp_zh">Whitepaper · 中文</a>
+      <a href="https://github.com/adfoke/parallel-bit-chain/blob/main/docs/DESIGN.md" target="_blank" rel="noopener" data-i18n="ft_design">Design doc</a>
+      <a href="https://github.com/adfoke/parallel-bit-chain" target="_blank" rel="noopener" data-i18n="ft_gh">GitHub</a>
+    </nav>
+    <p class="f-disc" data-i18n="ft_disc">PTC is in the design stage: this site describes a specification, not a shipped network. Nothing here is an offer to sell securities or tokens.</p>
+    <p class="f-copy"><span data-i18n="ft_copy">© 2026 Parallel Bit Chain contributors</span> · <span class="flip-b">b</span>tc, flipped</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var T = {
+    en: "PTC — Parallel Bit Chain · BTC, flipped",
+    zh: "PTC — Parallel Bit Chain · 翻过来的 BTC"
+  };
+  var D = {
+    en: {
+      nav_mirror: "Mirror", nav_geyser: "Geyser", nav_honesty: "Honesty", nav_roadmap: "Roadmap",
+      hero_eyebrow: "PARALLEL BIT CHAIN · GPU-NATIVE PROOF OF WORK",
+      hero_head: "BTC, flipped — same ledger, opposite proof of work.",
+      hero_sub: "A GPU-native PoW chain that keeps Bitcoin's ledger semantics exactly — UTXO, 10-minute blocks, 21 million coins, four-year halvings — and replaces only the proof of work. Not “banning ASICs” (impossible), but making an ASIC a worse deal than a graphics card.",
+      hero_cta_wp: "Read the whitepaper",
+      hero_status: "design stage · P0 spec freeze in progress · no code yet, no coin yet",
+      hero_seed_label: "GENESIS COMMITMENT",
+      stat1_l: "block interval", stat2_l: "total supply", stat3_l: "blocks per halving", stat4_l: "block header",
+      mir_eyebrow: "01 · THE MIRROR",
+      mir_h2: "One axis identical. One axis inverted.",
+      mir_lead: "Flip a lowercase b and you get a p. PTC keeps Bitcoin's ledger untouched and flips its proof of work — that is the whole project.",
+      mir_same_h: "IDENTICAL TO BITCOIN",
+      mir_flip_h: "FLIPPED",
+      mir_same_1: "UTXO transaction model",
+      mir_same_2: "600-second blocks",
+      mir_same_3: "21,000,000 PTC, halving every 210,000 blocks",
+      mir_same_4: "Bitcoin difficulty formula — 2016-block window, ±4× clamp",
+      mir_same_5: "Bech32m addresses, HRP ptc",
+      mir_same_6: "Taproot: Schnorr default, ECDSA compatible",
+      mir_same_7: "MuSig2 multisig, CLTV/CSV timelocks",
+      mir_flip_1: "Geyser PoW — memory-bandwidth-bound hashing",
+      mir_flip_2: "Per-block random programs — 256 mixed INT/FP instructions",
+      mir_flip_3: "Scheduled algorithm rotation via algo_version",
+      mir_flip_4: "128-byte header with algo_version + mix_digest",
+      mir_flip_5: "Mining economics: buy a GPU, don't tape out an ASIC",
+      gey_eyebrow: "02 · GEYSER · PROOF OF WORK",
+      gey_h2: "Three layers between ASICs and your GPU",
+      gey_c1_h: "Bandwidth binding",
+      gey_c1_b: "Every hash streams random 8 KiB reads across a 6 GiB dataset. The bottleneck is memory bandwidth — and consumer GPUs are the platform-wide optimum of hashrate per dollar per GB/s. CPUs, FPGAs and AI accelerators are structurally priced out.",
+      gey_c2_h: "Random program layer",
+      gey_c2_b: "Each block's PoW program is generated from the previous block hash: 256 mixed integer/float instructions, reshuffled every block. An ASIC that wants to keep up has to build itself into a GPU.",
+      gey_c3_h: "Rotation covenant",
+      gey_c3_b: "algo_version hard-forks the algorithm on a published 2–3 year schedule. GPU miners update software; ASIC tape-outs turn into landfill.",
+      gey_target: "Target: ASIC efficiency capped at ≤2× with no payback · dataset ≤60% of median-GPU VRAM (6 GiB today, +32 MiB per epoch)",
+      hon_eyebrow: "03 · HONEST ENGINEERING",
+      hon_h2: "What we don't claim",
+      hon_lead: "A chain that hides its trade-offs is marketing, not engineering. The ugly parts are written down, with numbers, in the docs.",
+      hon_1_h: "No absolute ASIC immunity",
+      hon_1_b: "It does not exist, and anyone promising it is selling something. The goal is economic: hold ASIC efficiency at ≤2× and destroy the payback period.",
+      hon_2_h: "Birth is fragile — said out loud",
+      hon_2_b: "New chains are weakest at launch. That is why mainnet ships only after six-plus months of public testnet, with signed checkpoints against early private chains.",
+      hon_3_h: "Zero premine, zero dev tax",
+      hon_3_b: "No allocation to founders. Emission starts at genesis on Bitcoin's exact schedule — one curve, nothing to argue about.",
+      hon_4_h: "Macs are legitimate miners",
+      hon_4_b: "Apple-silicon UMA needs zero consensus changes: M4 Max ≈ 0.8× an RTX 5070 at lower energy per hash. A Metal backend lands in P2.",
+      hon_5_h: "Blocks stay small",
+      hon_5_b: "4M weight units with no growth policy. Throughput belongs on L2; the chain itself carries hashes, not files.",
+      hon_6_h: "No quantum theater",
+      hon_6_b: "No PQC at genesis — no CRQC exists. The extension points are reserved now and triggered by capability milestones, not by marketing.",
+      rmp_eyebrow: "04 · ROADMAP",
+      rmp_h2: "Four phases, no shortcuts",
+      rmp_now: "NOW",
+      rmp_p0_h: "Spec freeze",
+      rmp_p0_b: "Cross-platform test vectors, bit-identical on five platforms — NVIDIA, AMD, Intel, Apple GPU, ARM64 CPU. The whitepaper graduates to v1.0.",
+      rmp_p1_h: "Full node & miners",
+      rmp_p1_b: "Go full node, CUDA and ROCm miners, Stratum v2.",
+      rmp_p2_h: "Incentivized testnet",
+      rmp_p2_b: "Six-plus months of public testnet, Metal backend for Apple GPUs, dual external audits.",
+      rmp_p3_h: "Mainnet",
+      rmp_p3_b: "Genesis with signed checkpoints against early private chains. Zero premine, zero dev tax.",
+      ft_tag: "No premine. No dev tax. No presale. No exceptions.",
+      ft_wp_en: "Whitepaper · EN (canonical)",
+      ft_wp_zh: "Whitepaper · 中文",
+      ft_design: "Design doc",
+      ft_gh: "GitHub",
+      ft_disc: "PTC is in the design stage: this site describes a specification, not a shipped network. Nothing here is an offer to sell securities or tokens.",
+      ft_copy: "© 2026 Parallel Bit Chain contributors"
+    },
+    zh: {
+      nav_mirror: "镜像", nav_geyser: "Geyser", nav_honesty: "诚实清单", nav_roadmap: "路线图",
+      hero_eyebrow: "PARALLEL BIT CHAIN · GPU 原生工作量证明",
+      hero_head: "翻过来的 BTC —— 账本相同，共识相反。",
+      hero_sub: "一条 GPU 原生的 PoW 公链：账本语义与 Bitcoin 完全一致 —— UTXO、10 分钟出块、2100 万枚、四年减半 —— 只替换工作量证明。不是“禁止 ASIC”（技术上不可能），而是让“造 ASIC”成为比“买显卡”更差的生意。",
+      hero_cta_wp: "读白皮书",
+      hero_status: "设计阶段 · P0 规范冻结进行中 · 暂无代码 · 暂无币",
+      hero_seed_label: "创世承诺",
+      stat1_l: "出块间隔", stat2_l: "总量", stat3_l: "每减半块数", stat4_l: "区块头",
+      mir_eyebrow: "01 · 镜像",
+      mir_h2: "一条轴完全相同，一条轴完全相反。",
+      mir_lead: "小写的 b 翻过来，就是 p。PTC 保留 Bitcoin 的账本，翻掉它的共识 —— 整个项目就这一句话。",
+      mir_same_h: "与 BITCOIN 相同",
+      mir_flip_h: "相反",
+      mir_same_1: "UTXO 交易模型",
+      mir_same_2: "600 秒出块",
+      mir_same_3: "21,000,000 PTC，每 210,000 块减半",
+      mir_same_4: "Bitcoin 难度公式 —— 2016 块窗口，±4× 限幅",
+      mir_same_5: "Bech32m 地址，HRP ptc",
+      mir_same_6: "Taproot：Schnorr 默认，ECDSA 兼容",
+      mir_same_7: "MuSig2 多签，CLTV/CSV 时间锁",
+      mir_flip_1: "Geyser PoW —— 显存带宽绑定的哈希",
+      mir_flip_2: "每块随机程序 —— 256 条混合 INT/FP 指令",
+      mir_flip_3: "algo_version 预定算法轮换",
+      mir_flip_4: "128 字节区块头，含 algo_version + mix_digest",
+      mir_flip_5: "挖矿经济学：买显卡，别流片",
+      gey_eyebrow: "02 · GEYSER · 工作量证明",
+      gey_h2: "挡在 ASIC 面前的三层防御",
+      gey_c1_h: "带宽绑定",
+      gey_c1_b: "每次哈希都在 6 GiB 数据集上随机读取 8 KiB。瓶颈锁死在显存带宽 —— 消费级 GPU 正是全平台 $/GB/s 的最优点；CPU、FPGA、AI 加速器在结构上就被定价出局。",
+      gey_c2_h: "随机程序层",
+      gey_c2_b: "每个块的 PoW 程序由上块哈希生成：256 条混合整数/浮点指令，每块重洗。想跟上的 ASIC，得先把自己造成一块 GPU。",
+      gey_c3_h: "算法轮换契约",
+      gey_c3_b: "algo_version 按公开的 2–3 年日程硬分叉轮换算法。GPU 矿工更新软件；ASIC 流片直接变废铁。",
+      gey_target: "目标：ASIC 效率压制在 ≤2× 且无法回本 · dataset ≤ 同期中位显卡 VRAM 的 60%（当前 6 GiB，每 epoch +32 MiB）",
+      hon_eyebrow: "03 · 诚实工程",
+      hon_h2: "我们不声称什么",
+      hon_lead: "藏着取舍的链是营销，不是工程。难看的部分都带着数字写进了文档。",
+      hon_1_h: "没有绝对 ASIC 免疫",
+      hon_1_b: "这东西不存在，承诺它的人都在卖东西。目标是经济性的：把 ASIC 效率压在 ≤2×，并摧毁它的回本周期。",
+      hon_2_h: "启动期脆弱 —— 直说",
+      hon_2_b: "新链在诞生时最弱。所以主网要等公开测试网跑满六个月以上，并带签名 checkpoint 防早期私有链。",
+      hon_3_h: "零预挖 · 零 dev tax",
+      hon_3_b: "创始团队零分配。发行从创世开始，日程与 Bitcoin 完全一致 —— 一条曲线，没什么可吵的。",
+      hon_4_h: "Mac 是合法矿机",
+      hon_4_b: "Apple 统一内存（UMA）共识零改动：M4 Max ≈ 0.8× RTX 5070，每 hash 电耗更低。Metal 后端排在 P2。",
+      hon_5_h: "区块不扩",
+      hon_5_b: "4M 重量单位，无扩容政策。吞吐走 L2；链上只放哈希，不放文件。",
+      hon_6_h: "不做量子表演",
+      hon_6_b: "创世不放 PQC —— CRQC 还不存在。扩展点现在预留，由能力里程碑触发，而不是营销节点。",
+      rmp_eyebrow: "04 · 路线图",
+      rmp_h2: "四个阶段，没有捷径",
+      rmp_now: "当前",
+      rmp_p0_h: "规范冻结",
+      rmp_p0_b: "跨平台测试向量五方位级一致：NVIDIA、AMD、Intel、Apple GPU、ARM64 CPU。白皮书升 v1.0。",
+      rmp_p1_h: "全节点与矿工",
+      rmp_p1_b: "Go 全节点、CUDA/ROCm 矿工、Stratum v2。",
+      rmp_p2_h: "激励测试网",
+      rmp_p2_b: "公开测试网 ≥6 个月、Apple GPU 的 Metal 后端、双外部审计。",
+      rmp_p3_h: "主网",
+      rmp_p3_b: "创世块带签名 checkpoint，防早期私有链。零预挖、零 dev tax。",
+      ft_tag: "零预挖 · 零 dev tax · 无预售 · 无例外。",
+      ft_wp_en: "白皮书 · 英文（canonical）",
+      ft_wp_zh: "白皮书 · 中文",
+      ft_design: "设计文档",
+      ft_gh: "GitHub",
+      ft_disc: "PTC 处于设计阶段：本站描述的是一份规范，而非已上线的网络。此处不构成任何证券或代币要约。",
+      ft_copy: "© 2026 Parallel Bit Chain 贡献者"
+    }
+  };
+  var btn = document.getElementById("langBtn");
+  function apply(l){
+    var d = D[l]; if (!d) return;
+    document.documentElement.lang = (l === "zh" ? "zh-CN" : "en");
+    document.title = T[l];
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < nodes.length; i++){
+      var k = nodes[i].getAttribute("data-i18n");
+      if (d[k] != null) nodes[i].textContent = d[k];
+    }
+    btn.textContent = (l === "en" ? "中文" : "EN");
+    try { localStorage.setItem("ptc-lang", l); } catch(e){}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("ptc-lang"); } catch(e){}
+  var lang = saved || ((navigator.language || "").toLowerCase().indexOf("zh") === 0 ? "zh" : "en");
+  apply(lang);
+  btn.addEventListener("click", function(){
+    apply(document.documentElement.lang === "zh-CN" ? "en" : "zh");
+  });
+})();
+</script>
+</body>
+</html>
