@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pitchain.dev/p0/schema/manifest.schema.json",
+  "title": "P0 vector manifest",
+  "type": "object",
+  "required": ["format_version", "profile", "algo_version", "epoch", "epoch_seed", "program_seed", "dataset", "samples", "generator"],
+  "additionalProperties": false,
+  "properties": {
+    "format_version": { "const": 1 },
+    "profile": { "enum": ["smoke", "full"] },
+    "algo_version": { "type": "integer", "minimum": 1 },
+    "epoch": { "type": "integer", "minimum": 0 },
+    "epoch_seed": {
+      "description": "null = 未冻结（TODO#1）；冻结后为 32B hex",
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" }
+      ]
+    },
+    "program_seed": {
+      "description": "null = 未冻结（TODO#3）；冻结后为 32B hex",
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" }
+      ]
+    },
+    "dataset": {
+      "type": "object",
+      "description": "DESIGN.md 附录 A 参数快照",
+      "required": ["EPOCH_BLOCKS", "DATASET_BYTES_INIT", "DATASET_GROWTH_BYTES_PER_EPOCH", "CACHE_BYTES_INIT", "CACHE_GROWTH_BYTES_PER_EPOCH", "DATASET_ITEM_BYTES", "ACCESS_ROUNDS", "LANES", "PROG_OPS", "REGISTERS", "HASH_INIT", "HASH_FINAL"]
+    },
+    "samples": { "type": "integer", "minimum": 1 },
+    "generator": {
+      "type": "object",
+      "required": ["tool", "seed", "algorithm"],
+      "additionalProperties": false,
+      "properties": {
+        "tool": { "type": "string" },
+        "seed": { "type": "string" },
+        "algorithm": { "type": "string" }
+      }
+    }
+  }
+}

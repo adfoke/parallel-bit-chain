@@ -1,0 +1,3 @@
+# full profile 向量集（≥10^6 样本，~200MB+）不进 git，本地/CI 生成
+full/
+*.jsonl.tmp

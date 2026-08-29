@@ -51,6 +51,7 @@ BTC 是人类的链，PTC 是机器的链 —— `b` 翻过来是 `p`，镜像�
 
 - 白皮书（草案 v0.9，双语）：**[English](docs/whitepaper/ptc-whitepaper-en.md)**（canonical）· **[中文](docs/whitepaper/ptc-whitepaper-zh.md)** —— 纯技术向；v1.0 于 P0 测试向量冻结时发布
 - 设计文档：**[docs/DESIGN.md](docs/DESIGN.md)**（v0.3.8）—— 含威胁模型、Geyser 完整规格、带宽经济学量化、前人算法成败史（Ethash / Kaspa / RandomX / KawPow）与风险登记册
+- P0 测试向量框架：**[p0/](p0/)** —— 向量格式 / 五方平台契约 / 位级验收与冻结流程已定义（骨架）；参考实现与 runner 待实现
 
 | 阶段 | 内容 |
 |---|---|

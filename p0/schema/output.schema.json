@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pitchain.dev/p0/schema/output.schema.json",
+  "title": "P0 golden.jsonl / 平台输出（每行一个对象）",
+  "type": "object",
+  "required": ["i", "mix", "hash"],
+  "additionalProperties": false,
+  "properties": {
+    "i": { "type": "integer", "minimum": 0 },
+    "mix": {
+      "description": "32B mix_digest（对应 header.mix_digest）",
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{64}$"
+    },
+    "hash": {
+      "description": "32B 最终 PoW 哈希",
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{64}$"
+    }
+  }
+}

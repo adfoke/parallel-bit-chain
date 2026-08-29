@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pitchain.dev/p0/schema/inputs.schema.json",
+  "title": "P0 inputs.jsonl（每行一个对象）",
+  "type": "object",
+  "required": ["i", "header", "nonce"],
+  "additionalProperties": false,
+  "properties": {
+    "i": { "type": "integer", "minimum": 0 },
+    "header": {
+      "description": "128B 区块头；mix_digest(86..118) 与 reserved(118..128) 必须为零",
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{256}$"
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{16}$"
+    }
+  }
+}

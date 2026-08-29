@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "profile": "smoke",
+  "algo_version": 1,
+  "epoch": 0,
+  "epoch_seed": null,
+  "program_seed": null,
+  "dataset": {
+    "EPOCH_BLOCKS": 2016,
+    "DATASET_BYTES_INIT": 6442450944,
+    "DATASET_GROWTH_BYTES_PER_EPOCH": 33554432,
+    "CACHE_BYTES_INIT": 50331648,
+    "CACHE_GROWTH_BYTES_PER_EPOCH": 262144,
+    "DATASET_ITEM_BYTES": 128,
+    "ACCESS_ROUNDS": 64,
+    "LANES": 32,
+    "PROG_OPS": 256,
+    "REGISTERS": "64 x u32 + 64 x f32 per lane",
+    "HASH_INIT": "keccak512",
+    "HASH_FINAL": "keccak256"
+  },
+  "samples": 1024,
+  "generator": {
+    "tool": "p0/harness/gen_inputs.py",
+    "seed": "p0-smoke-1",
+    "algorithm": "sha256-counter-v1"
+  }
+}
