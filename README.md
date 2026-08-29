@@ -58,7 +58,7 @@ BTC 是人类的链，PTC 是机器的链 —— `b` 翻过来是 `p`，镜像�
 | 阶段 | 内容 |
 |---|---|
 | **P0** | 规范冻结；五方测试向量（NVIDIA / AMD / Intel / Apple GPU / ARM64 CPU）位级一致；白皮书 v1.0 发布 |
-| **P1** | Go 全节点 + CUDA/ROCm 矿工 + Stratum v2 + headless 钱包 SDK（agent-first） |
+| **P1** | Go 全节点（含 mempool 政策包 v1）+ CUDA/ROCm 矿工 + Stratum v2 + headless 钱包 SDK（agent-first） |
 | **P2** | 激励测试网 ≥6 个月、Metal 后端、双审计 |
 | **P3** | 主网启动（签名 checkpoint 防早期私有链） |
 

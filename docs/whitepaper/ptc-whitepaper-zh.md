@@ -339,7 +339,7 @@ PTC 在共识层内容中立。链上嵌入数据无法被实质审查（witness
 | 阶段 | 交付物 | 出口标准 |
 |---|---|---|
 | **P0** | 规范冻结；五平台测试向量（NVIDIA / AMD / Intel / Apple GPU / ARM64 CPU，每方 ≥10⁶ 样本）；白皮书 v1.0 | 五平台位级一致 |
-| **P1** | Go 全节点（UTXO、共识、p2p）；CUDA + ROCm 矿工；Stratum v2；headless 钱包 SDK（agent-first） | 公开测试网持续运行 |
+| **P1** | Go 全节点（UTXO、共识、p2p、mempool 政策包 v1：RBF/CPFP/package relay/TRUC+锚）；CUDA + ROCm 矿工；Stratum v2；headless 钱包 SDK（agent-first） | 公开测试网持续运行；mempool 政策功能测试通过 |
 | **P2** | 激励测试网（无价值测试币）；Metal 后端；共识 + 密码学审计；攻击演练 | ≥ 6 个月稳定 + 两家审计通过 |
 | **P3** | 主网创世（签名 checkpoint） | — |
 

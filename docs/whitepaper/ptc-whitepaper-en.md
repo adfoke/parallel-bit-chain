@@ -340,7 +340,7 @@ Deliberately Bitcoin-identical: 50 PTC genesis subsidy, halving every 210,000 bl
 | Phase | Deliverable | Exit criterion |
 |---|---|---|
 | **P0** | spec freeze; five-platform test vectors (NVIDIA / AMD / Intel / Apple GPU / ARM64 CPU; ≥10⁶ samples each); whitepaper v1.0 | bit-exact agreement across all five |
-| **P1** | Go full node (UTXO, consensus, p2p); CUDA + ROCm miners; Stratum v2; headless wallet SDK (agent-first) | public testnet running continuously |
+| **P1** | Go full node (UTXO, consensus, p2p, mempool package v1: RBF/CPFP/package relay/TRUC+anchors); CUDA + ROCm miners; Stratum v2; headless wallet SDK (agent-first) | public testnet running continuously; mempool policy functional tests pass |
 | **P2** | incentivized testnet (valueless coins); Metal backend; consensus + cryptography audits; attack exercises | ≥ 6 months stable + two audits passed |
 | **P3** | mainnet genesis with signed checkpoints | — |
 
