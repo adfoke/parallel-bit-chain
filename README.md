@@ -4,6 +4,8 @@
 
 **命名**：小写 `b` 上下翻转就是 `p` —— PTC 是 BTC 的镜像：账本侧相同，共识侧相反。Parallel，也是 flipped。
 
+**官网**：[pitchain.dev](https://pitchain.dev) —— 部署在 Cloudflare 上（`wrangler deploy` 即发布）
+
 **核心思路**：链层最大化复刻 Bitcoin（UTXO、10 分钟出块、2100 万枚、四年减半），唯一的核心差异是共识算法 —— 不是"禁止 ASIC"（技术上不可能），而是让"造 ASIC 不如买显卡"。
 
 ## 设计一览

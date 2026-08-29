@@ -1,0 +1,11 @@
+{
+  "name": "pitchain",
+  "compatibility_date": "2026-08-29",
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "pitchain.dev", "custom_domain": true }
+  ]
+}
