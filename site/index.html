@@ -347,7 +347,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       <a href="https://github.com/adfoke/parallel-bit-chain" target="_blank" rel="noopener" data-i18n="ft_gh">GitHub</a>
     </nav>
     <p class="f-disc" data-i18n="ft_disc">PTC is in the design stage: this site describes a specification, not a shipped network. Nothing here is an offer to sell securities or tokens.</p>
-    <p class="f-copy"><span data-i18n="ft_copy">© 2026 Parallel Bit Chain contributors</span> · <span class="flip-b">b</span>tc, flipped</p>
+    <p class="f-copy"><span data-i18n="ft_copy">© 2026 Parallel Bit Chain contributors</span> <span id="f-flip">· <span class="flip-b">b</span>tc, flipped</span></p>
   </div>
 </footer>
 
@@ -356,6 +356,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
   var T = {
     en: "PTC — Parallel Bit Chain · BTC, flipped",
     zh: "PTC — Parallel Bit Chain · 翻过来的 BTC"
+  };
+  var MD = {
+    en: "A GPU-native, Bitcoin-isomorphic proof-of-work chain. Same ledger as Bitcoin, flipped proof of work. Design stage — P0 spec freeze in progress.",
+    zh: "一条 GPU 原生、Bitcoin 同构的 PoW 公链。账本相同，共识相反。设计阶段 · P0 规范冻结进行中。"
   };
   var D = {
     en: {
@@ -508,6 +512,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,13,18,.82);backdrop-f
       if (d[k] != null) nodes[i].textContent = d[k];
     }
     btn.textContent = (l === "en" ? "中文" : "EN");
+    var md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute("content", MD[l]);
+    var od = document.querySelector('meta[property="og:description"]');
+    if (od) od.setAttribute("content", MD[l]);
+    var ot = document.querySelector('meta[property="og:title"]');
+    if (ot) ot.setAttribute("content", T[l]);
+    var ff = document.getElementById("f-flip");
+    if (ff) ff.innerHTML = (l === "zh" ? '· 翻过来的 <span class="flip-b">b</span>tc' : '· <span class="flip-b">b</span>tc, flipped');
     try { localStorage.setItem("ptc-lang", l); } catch(e){}
   }
   var saved = null;
